@@ -1,0 +1,252 @@
+	<!-- BREADCRUMB -->
+	<head>
+            <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+            
+    </head>
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="#">Trang chủ</a></li>
+				<li><a href="#">Sản phẩm</a></li>
+				<li class="text-capitalize"><a href="#">{{data.cat}}</a></li>
+				<li class="active" class="text-capitalize">{{data.productname}}</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<!--  Product Details -->
+				<div class="product product-details clearfix">
+					<div class="col-md-6">
+						<div id="product-main-view">
+							<div class="product-view">
+								<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{data.imagePath}}" alt="">
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-md-6">
+						<div class="product-body">
+							<div class="product-label">
+								<span>Mới</span>
+								<span class="sale">{{data.saleoff}}</span>
+							</div>
+							<h2 class="product-name">{{data.productname}}</h2>
+							<h3 class="product-price">{{convertmoney data.price}} <del class="product-old-price">{{convertmoney data.oldprice}}</del></h3>
+							<div>
+								<div class="product-rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-o empty"></i>
+								</div>
+							</div>
+							<p><strong>Số lần xem trang:</strong> <span class="text-capitalize">{{countview}}</span></p>
+							{{!-- <p><strong>Availability:</strong> In Stock</p> --}}
+							<p><strong>Tính trạng:</strong> <span class="text-capitalize">{{data.availability}}</span></p>
+							<p><strong>Thương hiệu:</strong> <span class="text-uppercase">{{data.producer}}</span></p>
+							<p>{{data.description}}</p>
+							<div class="">
+									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
+									<button class="main-btn icon-btn"><i class="fa fa-share-alt"></i></button>
+							</div>
+
+							<div class="product-btns">
+							
+								<div class="qty-input">
+									<span class="text-uppercase">Số lượng: </span>
+									<input class="input" type="number" value="1" onchange="getqty()" id="qty" min="1">
+								</div>
+								<a id="addtocartqty" class="primary-btn add-to-cart" href="/add-to-cart/{{data._id}}/1"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a>
+								
+							</div>
+						</div>
+					</div>
+					<script>
+						function getqty(){
+							let x = $('#addtocartqty').attr('href');
+							let y = x.split('/');
+							if(y[3]){
+								var href = '';
+								for(var i =0; i<3; i++){
+									href += y[i]+'/';
+								}
+								$('#addtocartqty').attr('href', href + parseInt($('#qty').val()))
+							}else{
+								$('#addtocartqty').attr('href', x + '/' + $('#qty').val())
+							}
+						}
+					</script>
+					<div class="col-md-12">
+						<div class="product-tab">
+							<ul class="tab-nav">
+								<li class="active"><a data-toggle="tab" href="#tab1">Mô tả</a></li>
+								<li><a data-toggle="tab" href="#tab2">Đánh giá</a></li>
+							</ul>
+							<div class="tab-content">
+								<div id="tab1" class="tab-pane fade in active">
+									<p>{{data.description}}</p>
+								</div>
+								<div id="tab2" class="tab-pane fade in">
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="product-reviews">
+												{{#each comments}}
+												<div class="single-review">
+													<div class="review-heading">
+														<div><a href="#"><i class="fa fa-user-o"></i> {{name}}</a></div>
+														{{!-- <div><a href="#"><i class="fa fa-clock-o"></i> 27 DEC 2017 / 8:0 PM</a></div> --}}
+													</div>
+													<div class="review-body">
+														<p>{{comment}}</p>
+													</div>
+												</div>
+												{{/each}}
+												<ul class="reviews-pages">
+													<div class="store-filter clearfix text-center">
+												<ul class="page-filter pagination text-center">
+													{{#for total_page}}
+														{{#ifCond currentpage @index}}
+															<li id="pages" class="active"><a href="?page={{@index}}" >{{@index}}</a></li>
+														{{else}}
+															<li id="pages"><a href="?page={{@index}}"  >{{@index}}</a></li>
+														{{/ifCond}}
+													{{/for}}
+												</ul>
+											</div>
+												</ul>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<h4 class="text-uppercase">Viết bình luận</h4>
+											<p>Địa chỉ email của bạn sẽ không được công bố.</p>
+											<form class="review-form" method="POST">
+												{{#if isAuthenticated}}
+												{{else}}
+												<div class="form-group">
+													<input class="input" type="text" placeholder="Your Name" id="name" name="name"/>
+												</div>												
+												{{/if}}
+												{{!-- <div class="form-group">
+													<input class="input" type="email" placeholder="Email Address" />
+												</div> --}}
+												<div class="form-group">
+													<textarea class="input" placeholder="Your review" id="comment" name="comment"></textarea>
+												</div>
+												<input type="hidden" id="postId" value="{{postId}}" name="postId">
+												{{!-- <div class="form-group">
+													<div class="input-rating">
+														<strong class="text-uppercase">Your Rating: </strong>
+														<div class="stars">
+															<input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
+															<input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
+															<input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
+															<input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
+															<input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
+														</div>
+													</div>
+												</div> --}}
+												<button class="primary-btn" type="submit" id ="submitcomment">Submit</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!-- /Product Details -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+	<script>
+	$(document).ready(function(){
+			 $("#submitcomment").submit(function(e){
+				 e.preventDefault();
+			 	console.log('xin chao'+ $(this).val() + $(this).attr('id'));
+				const name = $(this).val();
+				const id = $(this).attr('id');
+				$.ajax({
+					url: form.attr('action'),
+					type: form.attr('method'),
+					data: form.serialize()
+					}).done(function(data) {
+      // Optionally alert the user of success here...
+    				}).fail(function(data) {
+      // Optionally alert the user of an error here...
+    });
+  });
+});
+</script>
+<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<!-- section title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h2 class="title">Sản phẩm liên quan</h2>
+					</div>
+				</div>
+				<!-- section title -->
+
+				<!-- Product Single -->
+				
+				<div class="row" >
+								{{#each products}}
+							<a href="{{this._id}}">
+								<div class="col-md-4 col-sm-6 col-xs-6 portfolio  {{this.cat}} {{this.producer}}" >
+								<div class="product product-single">
+									<div class="product-thumb">
+										<div class="product-label">
+											<span>New</span>
+											<span class="sale">{{this.saleoff}}</span>
+										</div>
+										<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+										<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{this.imagePath}}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-price">{{convertmoney price}}<del class="product-old-price">{{convertmoney oldprice}}</del></h3>
+										<div class="product-rating">
+											<i class="fa fa-star"></i></br>
+											<i class="fa fa-star"></i></br>
+											<i class="fa fa-star"></i></br>
+											<i class="fa fa-star"></i></br>
+											<i class="fa fa-star-o empty"></i>
+										</div>
+										<div id="idname">
+											<h2 class="product-name" ><a href="{{_id}}">{{productname}}</a></h2>
+										</div>
+										<div class="product-btns">
+											<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+											<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							</a>
+							{{/each}}
+						</div>
+					</div>
+				<!-- /Product Single -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+</body>
+</html>

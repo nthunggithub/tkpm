@@ -1,0 +1,49 @@
+
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<form id="checkout-form" class="clearfix">
+					<div class="col-md-6">
+						<h3 class="text-primary">Nhập địa chỉ giao hàng</h3>
+						<div class="section-title">
+							<h3 class="title">HÓA ĐƠN CHI TIẾT</h3>
+						</div>
+						<form></form>
+						<form class="review-form" method="POST">
+							<div class="form-group">
+								<input class="input" type="text" name="name" placeholder="Họ tên" required oninvalid="this.setCustomValidity('Vui lòng nhập đầy đủ họ tên')" oninput="this.setCustomValidity('');" pattern="[^0-9*.$+=!@]{6,30}$">
+							</div>
+							<div class="form-group">
+								<input class="input" type="text" name="address" placeholder="Địa chỉ cụ thể" oninvalid="this.setCustomValidity('Vui lòng nhập nhập địa chỉ cụ thể')" oninput="this.setCustomValidity('');" pattern="^[A-Za-z\d ,-_]{6,30}$" required>
+							</div>
+							<div class="form-group">
+								<input class="input" type="tel" name="phonenumber" placeholder="Telephone" pattern="[0-9].{9,10}" oninvalid="this.setCustomValidity('Vui lòng nhập số điện thoại hợp lệ 9-10 số')" oninput="this.setCustomValidity('');" required>
+							</div>
+							<div class="payments-methods">
+							<div class="section-title">
+								<h4 class="title">PHƯƠNG PHÁP THANH TOÁN</h4>
+							</div>
+							<div class="form-group input-checkbox">
+								<input type="radio" name="payments" id="payments-1" checked value="0" name="methodpay">
+								<label for="payments-1">COD</label>
+								<div class="caption">
+									<p> Thanh toán khi nhận hàng </p>
+								</div>
+							</div>
+							</div>
+							<button class="primary-btn" type="submit" id ="submitcomment">Submit</button>
+						</form>
+					</div>
+
+					<div class="col-md-6">	
+					</div>
+				</form>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->

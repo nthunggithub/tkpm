@@ -1,0 +1,64 @@
+
+<div class="splash-container">
+    <div class="card ">
+        <div class="card-header">
+            <h3 class="mb-1">Đăng ký</h3>
+            <p>Vui lòng điền thông tin</p>
+        </div>
+              
+        {{# if check }}
+            <h4>Successful validation!</h4>
+        {{/if}}
+
+        {{# if errors }}
+
+            <h4 class="custom-control" id="errorsignup">{{errors}}</h4>
+
+        {{/if}}
+
+        <div class="card-body">
+            <form action="/sign-up" method="post">
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="text" oninvalid="this.setCustomValidity('Yêu cầu nhập a-z A-Z 0-9 - _ .')" oninput="this.setCustomValidity('');" name="username" required="" placeholder="Tài khoản" autocomplete="off" pattern="^(?=.{6,20}$)(?:[a-zA-Z\d]+(?:(?:\.|-|_)[a-zA-Z\d])*)+$">
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" oninvalid="InvalidMsg(this);" oninput="InvalidMsg(this);" type="email" name="email" required="" placeholder="E-mail" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" id="pass1" type="password" name="password" required="" placeholder="Mật khẩu" pattern="^[A-Za-z\d@$!%*.#?&_-]{6,18}$" oninvalid="this.setCustomValidity('Yêu cầu nhập a-z A-Z 0-9 và ký tự đặt biệt')" oninput="this.setCustomValidity('');">
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="password" required="" name="confirm" placeholder="Nhập lại mật khẩu" pattern="^[A-Za-z\d@$!%*.#?&_-]{6,18}$" oninvalid="this.setCustomValidity('Yêu cầu nhập a-z A-Z 0-9 và ký tự đặt biệt')" oninput="this.setCustomValidity('');">
+                </div>
+                <div class="form-group">
+                    <label class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" name="checkbox"><span class="custom-control-label">Bạn đồng ý với các <a href="#">điều khoản và điều kiện</a></span>
+                    </label>
+                </div>
+                <div class="form-group pt-2">
+                    <button class="btn btn-block btn-primary" type="submit">Đăng ký tài khoản</button>
+                </div>               
+            </form>
+        </div>
+        <div class="card-footer bg-white">
+            <p>Đã có tài khoản? <a href="/login" class="text-secondary">Đăng nhập tại đây</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function InvalidMsg(textbox) {
+    
+    if (textbox.value == '') {
+        textbox.setCustomValidity('Yêu cầu địa chỉ email');
+    }
+    else if(textbox.validity.typeMismatch){
+        textbox.setCustomValidity('Vui lòng điền địa chỉ email hợp lệ');
+    }
+    else {
+        textbox.setCustomValidity('');
+    }
+    return true;
+}
+
+</script>

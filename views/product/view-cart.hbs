@@ -1,0 +1,97 @@
+
+
+
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">View-Cart</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<form id="checkout-form" class="clearfix">				
+					<div class="col-md-12">
+						<div class="order-summary clearfix">
+							<div class="section-title">
+								<h3 class="title">Giỏ hàng</h3>
+							</div>
+							<table class="shopping-cart-table table">
+								<thead>
+									<tr>
+										<th>Sản phẩm</th>
+										<th></th>
+										<th class="text-center">Giá</th>
+										<th class="text-center">Số lượng</th>
+										{{!-- <th class="text-center">Tiền</th> --}}
+										<th class="text-right"></th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each products}}
+									<tr>
+										<td class="thumb"><img src="https://admin1712482-1712509-1712528.herokuapp.com/{{item.imagePath}}" alt=""></td>
+										<td class="details">
+											<a href="product/{{item._id}}">{{item.productname}}</a>
+										</td>
+										<td class="price text-center"><strong>{{item.price}}</strong><br><del class="font-weak"><small>{{item.oldprice}}</small></del></td>
+										<td class="qty text-center"><input class="input qty" type="number" value="{{qty}}"  id="{{item._id}}" min="1"/></td>
+										{{!-- <td class="total text-center"><strong class="primary-color">{{totalmoney item.price qty}}</strong></td> --}}
+										<td class="text-right"><a class="main-btn icon-btn" href="removecart/{{item._id}}"><i class="fa fa-close"></i></a></td>
+									</tr>
+									{{/each}}
+								</tbody>
+								<tfoot>
+									<tr>
+										<th class="empty" colspan="3"></th>
+										<th>Tổng tiền</th>
+										<th colspan="2" class="sub-total total" id="total">{{totalPrice}}</th>
+									</tr>
+								</tfoot>
+							</table>
+							<div class="pull-right">
+								<a class="primary-btn" href="/status-produts">Đơn mua</a>
+								{{#if isAuthenticated}}
+                                <a class="primary-btn" href="/checkout">Checkout</a>
+								{{else}}
+								<a class="primary-btn" href="/login">Checkout</a>	
+								{{/if}}	
+							</div>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+<script>
+	$(document).ready(function(){
+			 $("input").change(function(e){
+			 	console.log('xin chao'+ $(this).val() + $(this).attr('id'));
+				const qty = $(this).val();
+				const id = $(this).attr('id');
+				$.ajax({
+					url: 'http://localhost:3000/reduce/'+ id,
+					type: "POST",
+					data:{
+						'qty': qty,
+					},
+					success: function(data){
+						console.log(data.total);
+						document.getElementById('total').innerHTML = data.total;
+					}
+				});
+			});
+	})
+</script>
