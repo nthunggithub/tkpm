@@ -84,7 +84,7 @@ exports.signuppost = async function (req, res, next) {
             user.SecretToken = secretToken;
             user.Active = false;
             user.Status = true;
-            const html = `Xin chào ${user.username},
+            const html = `Xin chào ${user.UserName},
         <br/>
         Cảm ơn bạn đã đăng ký!
         <br/><br/>
@@ -95,16 +95,11 @@ exports.signuppost = async function (req, res, next) {
         <br/><br/>
         Chúc bạn thành công`
             console.log(user);
-            //user.ID_Customer = 2;
-            await query('INSERT INTO customer SET ? ', user);
-            await mailer.sendEmail(process.env.usermailer, user.email, 'Please verify your email!', html);
+            await mailer.sendEmail(process.env.usermailer, user.Email, 'Please verify your email!', html);
             success = true;
             req.flash('success', 'Please check your email.');
-            // user.save((err, doc) => {
-            //     res.redirect('/');
-            // })
-            user.ID_Customer = 2;
             await query('INSERT INTO customer SET ? ', user);
+            res.redirect('/');
         } catch (err) {
             next(err);
         }
@@ -153,7 +148,7 @@ module.exports.verify = async function (req, res, next) {
 
         await query('update customer set Active = ?, secretToken = ? where SecretToken = ?',[true, "", secretToken]);
 
-        req.flash('success', 'verify thanh cong');
+        req.flash('success', 'verify Thành công');
         res.redirect('/login');
     } catch (error) {
         next(error);
@@ -179,11 +174,11 @@ module.exports.forgotpasswordpost = async function (req, res, next) {
             return;
         }
 
-        user.secretToken = randomstring.generate();
+        user.SecretToken = randomstring.generate();
 
         //await user.save();
-        await query('update SecretToken = ? where Email = ?', [user.secretToken, email]);
-        const html = `Xin chào ${user.username},
+        await query('update customer set SecretToken = ? where Email = ?', [user.SecretToken, email]);
+        const html = `Xin chào ${user.UserName},
       <br/>
       Bạn đã lấy lại mật khẩu thành công!
       <br/><br/>
@@ -191,12 +186,12 @@ module.exports.forgotpasswordpost = async function (req, res, next) {
       <br/>
       <b>Vui lòng nhấn vào link để hoàn tất quá trình đổi mật khẩu</b>
       <br/>
-      Link : <b>${process.env.urlwebsite}forgot-password/${user.secretToken}</b>
+      Link : <b>${process.env.urlwebsite}forgot-password/${user.SecretToken}</b>
       <br/>
       <p>Vui lòng đổi mật khẩu sau khi hoàn tất</p>
       <br/><br/>
       Chúc bạn thành công`
-        await mailer.sendEmail(process.env.usermailer, user.email, 'Đổi mật khẩu!', html);
+        await mailer.sendEmail(process.env.usermailer, email, 'Đổi mật khẩu!', html);
 
         res.redirect('/login');
     } catch (err) {
@@ -233,20 +228,20 @@ module.exports.profileupdate = async function (req, res, next) {
             var useremail = await query('SELECT * FROM customer where Email = ?',[req.body.email] );
             if (useremail.length == 0) {
                 //user.email = req.body.email;
-                req.flash('messageprofile', 'Vui lòng verify email để thay đổi email');
-                user.SecretToken = randomstring.generate();
-                req.session.changeemail = req.body.email;
-                const html = `Xin chào ${req.user.UserName},
-          <br/>
-          Cảm ơn bạn đã đăng ký!
-          <br/><br/>
-          Vui lòng nhấp vào link để verify your email.
-          <br/>
-          Link: <b>${process.env.urlwebsite}verify/${user.SecretToken}</b>
-          <br/>
-          <br/><br/>
-          Chúc bạn thành công`
-                await mailer.sendEmail(process.env.usermailer, req.body.email, "Vui lòng Verify email", html)
+        //         req.flash('messageprofile', 'Vui lòng verify email để thay đổi email');
+        //         user.SecretToken = randomstring.generate();
+        //         req.session.changeemail = req.body.email;
+        //         const html = `Xin chào ${req.user.UserName},
+        //   <br/>
+        //   Cảm ơn bạn đã đăng ký!
+        //   <br/><br/>
+        //   Vui lòng nhấp vào link để verify your email.
+        //   <br/>
+        //   Link: <b>${process.env.urlwebsite}verify/${user.SecretToken}</b>
+        //   <br/>
+        //   <br/><br/>
+        //   Chúc bạn thành công`
+        //         await mailer.sendEmail(process.env.usermailer, req.body.email, "Vui lòng Verify email", html)
             } else {
                 req.flash('messageprofile', 'Email đã tồn tại');
             }
@@ -268,6 +263,10 @@ module.exports.profileupdate = async function (req, res, next) {
     } catch (error) {
         next(error);
     }
+}
+
+module.exports.editprofile = function (req, res, next) {
+    res.render('users/updateprofile', { message: req.flash("messageupdateprofile"), user: req.user });
 }
 
 

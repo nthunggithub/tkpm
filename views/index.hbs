@@ -86,7 +86,7 @@
 									<div class="product-thumb">
 										<div class="product-label">
 											<span>Mới</span>
-											<span class="sale">{{Discount}}</span>
+											<span class="sale">Giảm {{Discount}} %</span>
 										</div>
 										<ul class="product-countdown">
 											<li><span>00 H</span></li>
@@ -98,7 +98,7 @@
 										<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{imagePath}}" alt="">
 									</div>
 									<div class="product-body">
-										<h3 class="product-price">{{convertmoney Price}} <del class="product-old-price">{{convertmoney Discount}}</del>
+										<h3 class="product-price">{{convertmoney Price Discount}} <del class="product-old-price">{{convertmoney Price 0}}</del>
 										</h3>
 										<div class="product-rating">
 											<i class="fa fa-star"></i>
@@ -200,7 +200,7 @@
 								<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{imagePath}}" alt="">
 							</div>
 							<div class="product-body">
-								<h3 class="product-price">{{convertmoney Price}}</h3>
+								<h3 class="product-price">{{convertmoney Price Discount}}</h3>
 								<div class="product-rating">
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star"></i>
@@ -247,7 +247,7 @@
 								<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{imagePath}}" alt="">
 							</div>
 							<div class="product-body">
-								<h3 class="product-price">{{convertmoney Price}}</h3>
+								<h3 class="product-price">{{convertmoney Price Discount}}</h3>
 								<div class="product-rating">
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star"></i>

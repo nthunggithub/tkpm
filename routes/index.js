@@ -23,6 +23,9 @@ router.get('/removecart/:id', productcontroller.removecart);
 
 router.get('/status-produts', middleware.isAuthenticated, productcontroller.statusproduts);
 
+router.post('/delete-order/:id', middleware.isAuthenticated, productcontroller.deleteorder);
+
+router.post('/accept-order/:id', middleware.isAuthenticated, productcontroller.acceptOrder);
 module.exports = router;
 
 

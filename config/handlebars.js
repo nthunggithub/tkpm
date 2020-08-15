@@ -1,10 +1,11 @@
 var handlebars = require('handlebars');
 var formatDecimal = require('format-decimal');
 
-handlebars.registerHelper('convertmoney', function(money){
+handlebars.registerHelper('convertmoney', function(money, discount){
     if(money == undefined)
         return "";
-    return formatDecimal(money,{precision: 0})+"đ";
+    const currentmoney = Math.round(money * (100 - discount)/100);
+    return formatDecimal(currentmoney,{precision: 0})+"đ";
 })
 handlebars.registerHelper('for', function(n, block) {
     var allblock = '';

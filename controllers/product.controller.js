@@ -5,6 +5,7 @@ var CartUser = require('../models/sessionuser');
 var Order = require('../models/order');
 var CountView = require('../models/countview');
 var query = require('../models/db');
+const { model } = require('../models/product');
 module.exports.index = async function (req, res, next) {
   try {
     // if (req.isAuthenticated()) {
@@ -32,31 +33,21 @@ module.exports.index = async function (req, res, next) {
   }
 };
 
-module.exports.products = function (req, res, next) {
+module.exports.products = async function (req, res, next) {
   var perPage = 9;
   let page = req.query.page || 1;
 
   let querygender = {};
-  if (req.query.gender != undefined) {
-    if (req.query.gender === "Nam") {
-      querygender = { gender: "nam" };
-    }
-    else {
-      querygender = { gender: "nữ" }
-    }
-  }
+  // if (req.query.gender != undefined) {
+  //   if (req.query.gender === "Nam") {
+  //     querygender = { gender: "nam" };
+  //   }
+  //   else {
+  //     querygender = { gender: "nữ" }
+  //   }
+  // }
 
-  let price = req.query.price;
-  //console.log(price);
-  let queryprice = {};
-
-  if (price == "duoi-5-tram")
-    queryprice = { price: { $lte: 500000 } }
-  else if (price == "tu-5-tram-1-trieu") {
-    queryprice = { price: { $gte: 500000, $lte: 1000000 } }
-  } else if (price == "tren-1-trieu") {
-    queryprice = { price: { $gte: 1000000 } }
-  }
+  
 
   let querysortprice = {};
   if (req.query.SortPrice == "gia-giam") {
@@ -66,46 +57,64 @@ module.exports.products = function (req, res, next) {
   }
 
   const producttype = req.query.Category;
-  const brand = req.query.Producer;
+  const author = req.query.Producer;
   //console.log(producttype);
   //console.log(brand);
-  let querybrand = {};
-  let queryproduct = {};
+  //let queryAuthor = {};
+  let queryfilter = {};
+  queryfilter['cat'] = '';
+  queryfilter['author'] = '';
+  queryfilter['price'] = {};
   if (producttype === 'all1')
-    queryproduct = {};
+    queryfilter['cat'] = '';
   else if (producttype === 'Cap') {
-    queryproduct = { cat: 'Cặp' };
+    queryfilter['cat'] = '';
   } else if (producttype === 'Giay') {
-    queryproduct = { cat: 'Giày' };
+    queryfilter['cat'] = '';
   } else if (producttype === 'Vi') {
-    queryproduct = { cat: 'Ví' };
+    queryfilter['cat'] = '';
   } else if (producttype === 'Dongho') {
-    queryproduct = { cat: 'Đồng hồ' };
+    queryfilter['cat'] = '';
   }
 
-  if (brand === 'all2')
-    querybrand = {};
-  else if (brand === 'vanoca') {
-    querybrand = { producer: 'vanoca' };
-  } else if (brand === 'manzo') {
-    querybrand = { producer: 'manzo' };
-  } else if (brand === 'slimheel') {
-    querybrand = { producer: 'slimheel' };
-  } else if (brand === 'apple') {
-    querybrand = { producer: 'apple' };
-  } else if (brand === 'samsung') {
-    querybrand = { producer: 'samsung' };
+  if (author === 'all2')
+    queryfilter['author'] = '';
+  else if (author === 'ten tac gia') {
+    queryfilter['author'] = 'ten tac gia';
+  } else if (author === 'manzo') {
+    queryfilter['author'] = '';
+  } else if (author === 'slimheel') {
+    queryfilter['author'] = '';
+  } else if (author === 'apple') {
+    queryfilter['author'] = '';
+  } else if (author === 'samsung') {
+    queryfilter['author'] = '';
   }
+
+  let price = req.query.price;
+  //console.log(price);
+  // let queryprice = {};
+
+  // if (price == "duoi-5-tram")
+  //   queryprice = { price: { $lte: 500000 } }
+  // else if (price == "tu-5-tram-1-trieu") {
+  //   queryprice = { price: { $gte: 500000, $lte: 1000000 } }
+  // } else if (price == "tren-1-trieu") {
+  //   queryprice = { price: { $gte: 1000000 } }
+  // }
+  if (price == "duoi-5-tram")
+    queryfilter[price] = { lte:500000 , gte: 0 };
+
 
   var search = req.query.search;
   var querysearch = {};
   if (search != undefined) {
     querysearch = { productname: { $regex: req.query.search, $options: 'i' } };
   }
-  let sql = 'select * from book';
-  if (queryproduct.cat != undefined) {
-    sql += ' where ID_Publisher = ' + queryproduct.cat;
-  }
+  // let sql = 'select * from book';
+  // if (queryproduct.cat != undefined) {
+  //   sql += ' where ID_Publisher = ' + queryproduct.cat;
+  // }
   // if(querybrand.cat != undefined){
   //   sql += ' where ID_Publisher = ' + queryproduct.cat;
   // }
@@ -120,26 +129,52 @@ module.exports.products = function (req, res, next) {
   //   console.log(result);
   // })
 
-  Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).skip((perPage * page) - perPage).limit(perPage).sort(querysortprice)
-    .exec((err, data) => {
-      Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).count().exec((err, count) => {
-        if (err) {
-          return next(err);
-        }
-        res.render('product/products', { title: 'Express', products: data, currentpage: page, total_page: Math.ceil(count / perPage), producttype: producttype, brand: brand });
-      })
-    })
+  // Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).skip((perPage * c) - perPage).limit(perPage).sort(querysortprice)
+  //   .exec((err, data) => {
+  //     Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).count().exec((err, count) => {
+  //       if (err) {
+  //         return next(err);
+  //       }
+  //       res.render('product/products', { title: 'Express', products: data, currentpage: page, total_page: Math.ceil(count / perPage), producttype: producttype, brand: brand });
+  //     })
+  //   })
+  //data = await query('select * from book b inner join author a where a.ID_Author = b.ID_Author');
+  // let data = await query('select * from book LIMIT ? OFFSET ?', [perPage, page - 1]);
+  let data = await query('select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category'
+    + ' and a.ID_Author = b.ID_Author');
+  // if(queryproduct.cat != undefined && queryAuthor.author == undefined)
+  //  data = await query('select * from book b inner join author a where a.ID_Author = b.ID_Author and a.NameAuthor = ?', [queryproduct.cat]);
+  // else if(queryproduct.cat == undefined && queryAuthor.author != undefined)
+
+  //let books = Json.parse(Json.stringify(data));
+  let products = [];
+  let books = JSON.parse(JSON.stringify(data));
+  for (let book of books) {
+    if ((book.NameCategory == queryfilter.cat || queryfilter.cat == '') && (book.NameAuthor == queryfilter.author || queryfilter.author == '')) {
+      if(JSON.stringify(queryfilter.price) === '{}'|| (book.Price < queryfilter.price.lte && book.Price > ueryfilter.price.gte))
+        products.push(book);
+    }
+  }
+  let count = products.length;
+  const currentpage  = (perPage * page) - perPage;
+  const limitproducts = products.slice(currentpage,currentpage + perPage)
+  //sap xep tang giam sort mang limitproducts
+  
+  //doc tu database
+  const datalistauthor = await query('select * from author');
+  const datalistcategory = await query('select * from category');
+  res.render('product/products', { title: 'Express', products: limitproducts, currentpage: page, total_page: Math.ceil(count / perPage), producttype: producttype, brand: author, datalistauthor: datalistauthor, datalistcategory:datalistcategory });
 };
 function formatDate(date) {
   var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
 
-  if (month.length < 2) 
-      month = '0' + month;
-  if (day.length < 2) 
-      day = '0' + day;
+  if (month.length < 2)
+    month = '0' + month;
+  if (day.length < 2)
+    day = '0' + day;
 
   return [day, month, year].join('-');
 }
@@ -151,50 +186,50 @@ module.exports.productpage = async (req, res, next) => {
     ' and id_book = ' + req.params.id;
   let data = await query(sql);
   //db.query(sql, async (err, data) => {
-    try {
-      let countview = new CountView(req.session.countview ? req.session.countview : {})
-      countview.add(data.ID_Book);
-      req.session.countview = countview;
-      console.log(req.session.countview);
-      if (req.isAuthenticated()) {
-        let cartuser;
-        cartuser = await CartUser.findOne({ user: req.user });
-        if (cartuser) {
-          cartuser.countview = req.session.countview;
-        } else {
-          cartuser = new CartUser({ user: req.user, countview: req.session.countview });
-        }
-        cartuser.save();
+  try {
+    let countview = new CountView(req.session.countview ? req.session.countview : {})
+    countview.add(data.ID_Book);
+    req.session.countview = countview;
+    console.log(req.session.countview);
+    if (req.isAuthenticated()) {
+      let cartuser;
+      cartuser = await CartUser.findOne({ user: req.user });
+      if (cartuser) {
+        cartuser.countview = req.session.countview;
+      } else {
+        cartuser = new CartUser({ user: req.user, countview: req.session.countview });
       }
-      // let products = await Product.find({ cat: data.cat });
-      let sql = 'select * from book where ID_Publisher = ' + data[0].ID_Publisher;
+      cartuser.save();
+    }
+    // let products = await Product.find({ cat: data.cat });
+    let sql = 'select * from book where ID_Publisher = ' + data[0].ID_Publisher;
 
 
-      const products = await query(sql);
-      console.log(products);
-      //ket thuc sua
+    const products = await query(sql);
+    console.log(products);
+    //ket thuc sua
 
-      result = await products.filter(element => element.id !== data.id);
-      //comments
-      sql = 'select * from comment where ID_Book = ?';
-      let count = await query(sql, req.params.id);
-      count = count.length;
-      sql = 'select UserName, Comment, DateComment from comment co inner join customer cu where co.ID_Customer = cu.ID_Customer and ID_Book = ? LIMIT ? OFFSET ?';
-      let comments = await query(sql, [req.params.id, perPage, page - 1]);
-      
-      
-      // let comments = await Comment.find({ postId: data.id }).skip((perPage * page) - perPage).limit(perPage);
-      // let count = await Comment.find({ postId: data.id }).count().exec();
-      //result.splice(Math.floor(Math.random() * products.length), 3)
+    result = await products.filter(element => element.id !== data.id);
+    //comments
+    sql = 'select * from comment where ID_Book = ?';
+    let count = await query(sql, req.params.id);
+    count = count.length;
+    sql = 'select UserName, Comment, DateComment from comment co inner join customer cu where co.ID_Customer = cu.ID_Customer and ID_Book = ? LIMIT ? OFFSET ?';
+    let comments = await query(sql, [req.params.id, perPage, page - 1]);
 
 
-      res.render('product/product-page', {
-        data: data[0], products: result,
-        postId: data._id, comments: comments, currentpage: page, total_page: Math.ceil(count / perPage), countview: countview.showtoOne(data._id)
-      });
-    } catch (err) {
-      next(err);
-    
+    // let comments = await Comment.find({ postId: data.id }).skip((perPage * page) - perPage).limit(perPage);
+    // let count = await Comment.find({ postId: data.id }).count().exec();
+    //result.splice(Math.floor(Math.random() * products.length), 3)
+
+
+    res.render('product/product-page', {
+      data: data[0], products: result,
+      postId: data._id, comments: comments, currentpage: page, total_page: Math.ceil(count / perPage), countview: countview.showtoOne(data._id)
+    });
+  } catch (err) {
+    next(err);
+
   }
 
   // Product.findOne({ _id: req.params.id  }, async(err,data)=>{
@@ -223,11 +258,11 @@ module.exports.productpage = async (req, res, next) => {
   //   }
   // });   
 };
-module.exports.productpagepost = async(req, res, next) => {
+module.exports.productpagepost = async (req, res, next) => {
   //const name = req.body.name || req.user.name || req.user.username;
   const comment = req.body.comment;
   const postId = req.body.postId;
-  if(!req.isAuthenticated){
+  if (!req.isAuthenticated) {
     res.redirect('back');
   }
   // let commentdb = new Comment({ name: name, comment: comment, postId: postId });
@@ -241,11 +276,11 @@ module.exports.productpagepost = async(req, res, next) => {
   //   }
   // })
   try {
-    await query('insert into comment set ?', [{ID_Customer : req.user.ID_Customer, ID_Book: postId,Comment:comment,DateComment: new Date()}]);
+    await query('insert into comment set ?', [{ ID_Customer: req.user.ID_Customer, ID_Book: postId, Comment: comment, DateComment: new Date() }]);
   } catch (error) {
-    
+
   }
-  
+
   res.redirect('back');
   //res.redirect(req.url);
 };
@@ -256,15 +291,15 @@ module.exports.checkout = function (req, res, next) {
 
 module.exports.checkoutpost = async function (req, res, next) {
   let dataorders = await query('select * from orders where ID_Customer = ? and Status = ?', [req.user.ID_Customer, 0]);
-    if(dataorders.length > 0){
-      var x = await query('update orders set TypePayment = ?, Address = ?, Name = ?,Phone = ?, Status = ? where ID_Order = ? ', [req.body.payments,
-        req.body.address,req.body.name, req.body.phonenumber, 1, dataorders[0].ID_Order])
-        console.log(x);
-     
-    }
-    req.flash('success', 'Bạn đã mua thành công!');
-    res.redirect('/');
-    return;
+  if (dataorders.length > 0) {
+    var x = await query('update orders set TypePayment = ?, Address = ?, Name = ?,Phone = ?, Status = ? where ID_Order = ? ', [req.body.payments,
+    req.body.address, req.body.name, req.body.phonenumber, 1, dataorders[0].ID_Order])
+    console.log(x);
+
+  }
+  req.flash('success', 'Bạn đã mua thành công!');
+  res.redirect('/status-produts');
+  return;
   try {
     // if (!req.session.cart) {
     //   return res.redirect('/');
@@ -296,8 +331,8 @@ module.exports.checkoutpost = async function (req, res, next) {
     //   methodpay: req.body.methodpay,
     //   date: datenow
     // })
-    
-    
+
+
     // order.save((err, result) => {
     //   if (err) {
     //     next(err);
@@ -312,21 +347,21 @@ module.exports.checkoutpost = async function (req, res, next) {
   }
 }
 module.exports.addtocart = async function (req, res, next) {
-  if(req.user == undefined){
+  if (req.user == undefined) {
     res.redirect('/login');
     return;
   }
   const productId = req.params.id;
   req.ID_Customer = req.user.ID_Customer;
   const qty = parseInt(req.params.id2);
- // let cart = new Cart(req.session.cart ? req.session.cart : {});
+  // let cart = new Cart(req.session.cart ? req.session.cart : {});
 
   const databook = await query('SELECT * FROM book where ID_Book = ?', productId);
   let createprice = databook[0].Price * qty;
   //lay cart cua khach hang
   let orderuser = await query('SELECT * FROM orders where ID_Customer = ? and Status = ?', [req.ID_Customer, 0]);
   if (orderuser.length == 0) {
-    
+
     await query('insert into orders set ? ', {
       ID_Customer: req.ID_Customer, DateCreated: new Date(),
       Amount: createprice, TypePayment: "", Address: "", Name: "", Phone: "", Status: 0
@@ -351,11 +386,11 @@ module.exports.addtocart = async function (req, res, next) {
       Quantity_DetailOrder: qty, Price: createprice
     });
   } else {
-    detailorder[0].Quantity_DetailOrder+=qty;
+    detailorder[0].Quantity_DetailOrder += qty;
     detailorder[0].Price += createprice;
     await query('update detail_order set Quantity_DetailOrder = ?, Price = ? where ID_Order = ? and ID_Book = ? ', [detailorder[0].Quantity_DetailOrder, detailorder[0].Price, detailorder[0].ID_Order, productId]);
   }
-    res.redirect('/products');
+  res.redirect('/products');
   // Product.findById(productId, async (err, data) => {
   //   if (err) {
   //     console.log('khong them dc vao gio');
@@ -451,18 +486,55 @@ module.exports.statusproduts = async function (req, res, next) {
     //   cart = new Cart(order.cart);
     //   order.items = cart.generateArray();
     // });
-    let orders = await query('select b.imagePath, b.NameBook, do.Quantity_DetailOrder, do.Price, o.Status from orders o inner join detail_order do inner join book b where b.ID_Book = do.ID_Book and Status <> 0 and o.ID_Order = do.ID_Order and o.ID_Customer = ?',[req.user.ID_Customer]);
+    let orders = await query('select o.ID_Order, b.imagePath, b.NameBook, do.Quantity_DetailOrder, do.Price, o.Status, o.Amount from orders o inner join detail_order do inner join book b where b.ID_Book = do.ID_Book and o.Status <> 0 and o.ID_Order = do.ID_Order and o.ID_Customer = ?', [req.user.ID_Customer]);
     //let orders = await query('select * from orders o inner join detail_order do where o.ID_Order = do.ID_Order and  ID_Customer = ? and Status <> ?', [req.user.ID_Customer, 0]);
     // orders.forEach(order => {
     //   //moi don dat hang
     //   //cart = new Cart(order.cart);
     //   order.items = cart.generateArray();
     // });
-    res.render('delivery/status-products', { orders: orders });
+    orders = JSON.parse(JSON.stringify(orders));
+    myArray = orders;
+    var groups = {};
+    for (var i = 0; i < myArray.length; i++) {
+      var groupName = myArray[i].ID_Order;
+      if (!groups[groupName]) {
+        groups[groupName] = [];
+      }
+      groups[groupName].push(myArray[i]);
+    }
+    myArray = [];
+    for (var groupName in groups) {
+      myArray.push({ ID_Order: groupName, book: groups[groupName], Amount: groups[groupName][0].Amount, Status: groups[groupName][0].Status });
+    }
+
+    res.render('delivery/status-products', { orders: myArray });
 
   } catch (error) {
     next(error);
   }
 
 };
+
+module.exports.deleteorder = async function (req, res, next) {
+  try {
+    let idorder = req.params.id;
+    await query('delete from detail_order where ID_Order = ? ', [idorder]);
+    await query('delete from orders where ID_Order = ?', [idorder]);
+
+    res.redirect('back');
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports.acceptOrder = async function (req, res, next) {
+  try {
+    let idorder = req.params.id;
+    await query('update orders set Status = 3 where ID_Order = ?', [idorder]);
+    res.redirect('back');
+  } catch (error) {
+    next(error);
+  }
+}
 

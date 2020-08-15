@@ -5,11 +5,11 @@ var middleware = require('../config/middleware')
 
 router.get('/sign-up', middleware.isNotAuthenticated, usercontroller.signup);
 
-router.post('/sign-up',middleware.isNotAuthenticated, usercontroller.signuppost);
+router.post('/sign-up', middleware.isNotAuthenticated, usercontroller.signuppost);
 
-router.get('/login',middleware.isNotAuthenticated, usercontroller.login);
+router.get('/login', middleware.isNotAuthenticated, usercontroller.login);
 
-router.get('/logout',middleware.isAuthenticated, usercontroller.logout);
+router.get('/logout', middleware.isAuthenticated, usercontroller.logout);
 
 router.route('/forgot-password')
   .get(middleware.isNotAuthenticated, usercontroller.forgotpassword)
@@ -24,6 +24,9 @@ router.route('/verify/:id')
 
 router.route('/profile')
   .get(middleware.isAuthenticated, usercontroller.profile)
+
+router.route('/updateprofile')
+  .get(middleware.isAuthenticated, usercontroller.editprofile)
   .post(middleware.isAuthenticated, usercontroller.profileupdate);
 
 router.route('/update-password')

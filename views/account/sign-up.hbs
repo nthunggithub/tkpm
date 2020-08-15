@@ -19,7 +19,7 @@
             <form action="/sign-up" method="post">
                 <div class="form-group">
                     <input class="form-control form-control-lg" type="text" name="fullname" required=""
-                        placeholder="Fullname" autocomplete="off">
+                        placeholder="Họ và tên" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <input class="form-control form-control-lg" type="text"
@@ -47,18 +47,20 @@
                 <div class="form-group">
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="gender">Nam
+                            <input type="radio" class="form-check-input" name="gender" value="Nam">Nam
                         </label>
                     </div>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="gender">Nữ
+                            <input type="radio" class="form-check-input" name="gender" value="Nữ">Nữ
                         </label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input class="form-control form-control-lg" type="number" name="phone" required=""
-                        placeholder="Số điện thoại" autocomplete="off">
+                    <input class="form-control form-control-lg" type="text" name="phone" id = "phone" required=""
+                        placeholder="Số điện thoại" autocomplete="off"  pattern="^[0-9]+$"
+                        oninvalid="this.setCustomValidity('Yêu cầu nhập đúng số điện thoại')"
+                        oninput="this.setCustomValidity('');">
                 </div>
                 <div class="form-group">
                     <input class="form-control form-control-lg" type="text" name="address" required=""
@@ -68,7 +70,7 @@
                     <input class="form-control form-control-lg" type="date" name="birthday" required=""
                         placeholder="Ngày sinh" autocomplete="off">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="custom-control custom-checkbox">
                         <input class="custom-control-input" type="checkbox" name="checkbox"><span
@@ -101,5 +103,12 @@
         }
         return true;
     }
-
+    function checkInp() {
+        var x = document.getElementById("phone").value;
+        var regex = /^[0-9]+$/;
+        if (x.match(regex)) {
+            alert("Must input numbers");
+            return false;
+        }
+    }
 </script>
