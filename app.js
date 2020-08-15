@@ -43,26 +43,27 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 // Login Work Start
-
+var query = require('./models/db');
 app.post('/reduce/:id', async function(req, res, next) {
   const productId = req.params.id;
   const qty = req.body.qty; 
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-  cart.reduce(productId, qty);
-  req.session.cart = cart;
-
+  // var cart = new Cart(req.session.cart ? req.session.cart : {});
+  // cart.reduce(productId, qty);
+  // req.session.cart = cart;
+  let amount;
   if(req.isAuthenticated()){
     var cartuser;
-    cartuser = await CartUser.findOne({user: req.user});
-    if(cartuser){
-      cartuser.cart = req.session.cart;
-    }else{
-      cartuser = new CartUser({user: req.user, cart: req.session.cart});
-    }
-    cartuser.save();
+    //cartuser = await CartUser.findOne({user: req.user});
+    let cartorder = await query('select * from orders where ID_Customer = ? and Status = 0',[req.user.ID_Customer] );
+    cartuser = await query('select * from detail_order where ID_Order = ? and ID_Book = ?',[cartorder[0].ID_Order, productId])
+    let newprice = cartuser[0].Price/cartuser[0].Quantity_DetailOrder * qty;
+    amount = cartorder[0].Amount - cartuser[0].Price + newprice;
+    await query('update orders set Amount = ? where ID_Order = ?',[amount, cartorder[0].ID_Order] );
+    await query('update detail_order set Quantity_DetailOrder = ?, Price = ? where ID_Order = ? and ID_Book = ?',[qty, newprice, cartorder[0].ID_Order, productId] );
+    
   }
 
-  res.status(200).send({ total: cart.totalPrice });
+  res.status(200).send({ total: amount });
 });
 
 app.use(function(req, res, next)

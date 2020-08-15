@@ -32,7 +32,8 @@
 										<th class="text-center">Giá</th>
 										<th class="text-center">Số lượng</th>
 										{{!-- <th class="text-center">Tiền</th> --}}
-										<th class="text-right"></th>
+										{{!-- <th class="text-right">Tổng tiền</th> --}}
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -44,7 +45,8 @@
 										</td>
 										<td class="price text-center"><strong>{{Price}}</strong><br><del class="font-weak"><small>{{Discount1}}</small></del></td>
 										<td class="qty text-center"><input class="input qty" type="number" value="{{Quantity_DetailOrder}}"  id="{{ID_Book}}" min="1"/></td>
-										{{!-- <td class="total text-center"><strong class="primary-color">{{totalmoney item.price qty}}</strong></td> --}}
+										
+										{{!-- <td class="total text-center"><strong class="primary-color">{{detail_orderPrice}}</strong></td> --}}
 										<td class="text-right"><a class="main-btn icon-btn" href="removecart/{{ID_Book}}"><i class="fa fa-close"></i></a></td>
 									</tr>
 									{{/each}}

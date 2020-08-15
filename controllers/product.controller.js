@@ -429,7 +429,7 @@ module.exports.viewcart = async function (req, res, next) {
     let uniqueObjects = null;
     if (dataorder.length > 0) {
       detailorder = await query('SELECT b.imagePath, b.NameBook, b.ID_Book, b.Price, b.Discount,' +
-        ' d.Quantity_DetailOrder FROM book b inner join detail_order d where b.ID_Book = d.ID_Book and d.ID_Order = ?', [dataorder[0].ID_Order]);
+        ' d.Quantity_DetailOrder, d.Price as detail_orderPrice FROM book b inner join detail_order d where b.ID_Book = d.ID_Book and d.ID_Order = ?', [dataorder[0].ID_Order]);
       // for(let i = 0; i< detailorder.length; i++ ){
 
       //uniqueObjects = [...new Map(detailorder.map(item => [item.ID_Book, item])).values()]
