@@ -46,12 +46,12 @@
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>
 								</div>
-								<strong class="text-uppercase">{{user.username}}<i class="fa fa-caret-down"></i></strong>
+								<strong class="text-uppercase">{{user.UserName}}<i class="fa fa-caret-down"></i></strong>
 							</div> 
 							<ul class="custom-menu">
 								<li><a href="./profile"><i class="fa fa-user-o"></i> Tài khoản</a></li>
 								<li><a href="/status-produts"><i class="fa fa-exchange"></i>Đơn mua</a></li>
-								<li><a href="/checkout"><i class="fa fa-check"></i> Thanh toán</a></li>
+								{{!-- <li><a href="/checkout"><i class="fa fa-check"></i> Thanh toán</a></li> --}}
 								<li><a href="/update-password"><i class="fa fa-key"></i> Đổi mật khẩu</a></li>
 								<li><a href="/logout"><i class="fa fa-unlock-alt"></i> Đăng xuất</a></li>
 							</ul>
@@ -81,9 +81,9 @@
 		<div class="container">
 			<div id="responsive-nav">
 				<!-- category nav -->
-				<div class="category-nav show-on-click">
-					<span class="category-header">DANH MỤC <i class="fa fa-list"></i></span>
-				</div>
+				{{!-- <div class="category-nav show-on-click">
+					<span class="category-header">Header</i></span>
+				</div> --}}
 				<!-- /category nav -->
 
 				<!-- menu nav -->

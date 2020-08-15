@@ -2,6 +2,8 @@ var handlebars = require('handlebars');
 var formatDecimal = require('format-decimal');
 
 handlebars.registerHelper('convertmoney', function(money){
+    if(money == undefined)
+        return "";
     return formatDecimal(money,{precision: 0})+"đ";
 })
 handlebars.registerHelper('for', function(n, block) {

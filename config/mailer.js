@@ -3,8 +3,10 @@ require('dotenv').config();
 const transport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: process.env.usermailer,
-    pass: process.env.passmailer
+    // user: process.env.usermailer,
+    // pass: process.env.passmailer
+    user: "ntlucyhung@gmail.com",
+    pass: "hung26081999"
   },
   tls: {
     rejectUnauthorized: false

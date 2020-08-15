@@ -37,34 +37,34 @@
 									</tr>
 								</thead>
 								<tbody>
-									{{#each this.cart.items}}
+									{{!-- {{#each this.cart.items}} --}}
+									
 									<tr>
-										<td class="thumb"><img src="https://admin1712482-1712509-1712528.herokuapp.com/{{item.imagePath}}" alt=""></td>
+										<td class="thumb"><img src="https://admin1712482-1712509-1712528.herokuapp.com/{{imagePath}}" alt=""></td>
 										<td class="details">
-											<a href="product/{{item._id}}">{{item.productname}}</a>
+											<a href="product/{{ID_Book}}">{{NameBook}}</a>
 										</td>
-										<td class="qty text-center">{{qty}}</td>
+										<td class="qty text-center">{{Quantity_DetailOrder}}</td>
 										<td></td>
-										<td class="total text-center"><strong class="primary-color">{{item.price}}</strong></td>
+										<td class="total text-center"><strong class="primary-color">{{Price}}</strong></td>
 										
-
 									</tr>
-									{{/each}}
+									{{!-- {{/each}} --}}
 								</tbody>
 								<tfoot>
 									<tr>
 										<th class="empty" colspan="3"></th>
 										<th>Trạng thái</th>
-										{{#ifCond 0 status}}
+										{{#ifCond 0 Status}}
 										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">Chờ lấy hàng</strong></th>
 										{{else}}
-										{{#ifCond 1 status}}
+										{{#ifCond 1 Status}}
 										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">Đang giao</strong></th>
 										{{else}}
-										{{#ifCond 2 status}}
+										{{#ifCond 2 Status}}
 										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">Đã giao</strong></th>
 										{{else}}
-										{{#ifCond 3 status}}
+										{{#ifCond 3 Status}}
 										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">Đã hủy</strong></th>
 										{{/ifCond}}
 										{{/ifCond}}
@@ -73,8 +73,8 @@
 									</tr>
 									<tr>
 										<th class="empty" colspan="3"></th>
-										<th>Tổng tiền</th>
-										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">{{this.cart.totalPrice}}</strong></th>
+										{{!-- <th>Tổng tiền</th>
+										<th colspan="2" class="sub-total primary-color"><strong class="primary-color">{{Amount}}</strong></th> --}}
 									</tr>	
 								</tfoot>
 							</table>	
