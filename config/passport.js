@@ -8,7 +8,7 @@ const customer = require('../models/customer');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'nthung',
+    password: 'khiemkhiem841999',
     database: 'shopping'
 });
 
