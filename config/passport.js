@@ -4,11 +4,12 @@ var bcrypt = require('bcrypt-nodejs');
 const mysql = require("mysql");
 var util = require('util');
 const customer = require('../models/customer');
+require('dotenv').config();
 
 var db=mysql.createConnection({
     host :  'localhost',
     user :  'root',  
-    password : '0905172825',
+    password : process.env.passmysql,
     database : 'shopping'
   });
   db.connect((err)=>{
@@ -22,16 +23,12 @@ const query = util.promisify(db.query).bind(db);
 
 
 passport.serializeUser(function (user, done) {
-    //done(null, user.id);
-
     done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser( async function (id, done) {
     const sql = 'SELECT * FROM customer where ID_Customer = ?';
     db.query(sql, id, (err, data) => {
-        const test = [];
-        //const x  = await User.findOne({ username: 'nthungnt2608' });
         result = data[0];
         let user = new customer();
         user.ID_Customer = result.ID_Customer;
@@ -45,7 +42,6 @@ passport.deserializeUser(function (id, done) {
 
         result.Birthday.setDate(result.Birthday.getDate() + 1);
         user.Birthday = result.Birthday.toISOString().slice(0, 10);
-        //user.Birthday = user.Birthday.toISOString().slice(0,10);
         done(err, user);
     });
 });

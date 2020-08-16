@@ -31,15 +31,26 @@ module.exports.products = async function (req, res, next) {
   const author = req.query.Author;
   const price = req.query.price;
   let queryfilter = {};
-  queryfilter['cat'] = "";
-  queryfilter['author'] = "";
+  queryfilter['cat'] = "all1";
+  queryfilter['author'] = "all2";
   queryfilter['price']={};
   if (producttype!==undefined)
     queryfilter['cat'] = producttype;
   if(author!==undefined)
     queryfilter['author']=author;
-  if(price!==undefined)
-    queryfilter['price']=price;
+  if(price!==undefined){
+    if(price === 'duoi-1-tram'){
+      queryfilter.price['gte'] = 0;
+      queryfilter.price['lte'] = 100000;
+    }else if(price == 'tu-1-tram-5-tram'){
+      queryfilter.price['gte'] = 100000;
+      queryfilter.price['lte'] = 500000;
+    }else if(price == 'tren-5-tram'){
+      queryfilter.price['gte'] = 500000;
+      queryfilter.price['lte'] = -1;
+    }
+  }
+  
   
   var search = req.query.search;
   var querysearch = {};
@@ -52,16 +63,33 @@ module.exports.products = async function (req, res, next) {
   let products = [];
   let books = JSON.parse(JSON.stringify(data));
   for (let book of books) {
-    if ((book.NameCategory == queryfilter.cat || queryfilter.cat == '') && (book.NameAuthor == queryfilter.author || queryfilter.author == '')) {
-      if (JSON.stringify(queryfilter.price) === '{}' || (book.Price < queryfilter.price.lte && book.Price > ueryfilter.price.gte))
+    if ((book.NameCategory == queryfilter.cat || queryfilter.cat == 'all1') && (book.NameAuthor == queryfilter.author || queryfilter.author == 'all2')) {
+      if (JSON.stringify(queryfilter.price) === '{}')
         products.push(book);
+      else if((book.Price < queryfilter.price.lte && book.Price > queryfilter.price.gte)||
+      (queryfilter.price.lte == -1 && book.Price > queryfilter.price.gte)){
+        products.push(book);
+      }
     }
   }
+  Array.prototype.sortBy = function(p) {
+    return this.slice(0).sort(function(a,b) {
+      return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
+    });
+  }
+  //sap xep tang giam sort mang limitproducts
+  if(JSON.stringify(querysortprice) !== '{}'){
+    products = products.sortBy('Price')
+    if(querysortprice.price == -1){
+      products.reverse();
+    }
+  }
+
+
   let count = products.length;
   const currentpage = (perPage * page) - perPage;
   const limitproducts = products.slice(currentpage, currentpage + perPage)
-  //sap xep tang giam sort mang limitproducts
-
+  
   //doc tu database
   const datalistauthor = await query('select * from author');
   const datalistcategory = await query('select * from category');

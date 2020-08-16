@@ -1,10 +1,10 @@
 var util = require('util');
-//var db = require('../models/db');
+require('dotenv').config();
 const mysql = require("mysql");
 var db=mysql.createConnection({
   host :  'localhost',
   user :  'root',  
-  password : '0905172825',
+  password : process.env.passmysql,
   database : 'shopping'
 });
 db.connect((err)=>{

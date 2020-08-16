@@ -9,7 +9,7 @@
       let Author = document.getElementById("myBtnproducer").value;
       let xAuthor=document.getElementById("myBtnproducer");
       let Url=decodeURIComponent(window.location.href);
-      window.alert(Url);
+      //window.alert(Url);
       let location=false;
       let ListCategory = [];
       let ListAuthor=[];
@@ -36,14 +36,14 @@
       if(Url.search("Category")>-1&&Url.search(Category)===-1)
       {
           let backup;
-          window.alert("Thay doi loai san pham");
+          //window.alert("Thay doi loai san pham");
           var i;
           for(i=0;i<ListCategory.length;i++)
           {
               if(Url.search(ListCategory[i])>-1)
               {
                   backup=ListCategory[i];
-                  window.alert("Thay doi roi ne");
+                  //window.alert("Thay doi roi ne");
                   break;
               }
           }
@@ -74,7 +74,7 @@
               if(Url.search(ListAuthor[j])>-1)
               {
                   backup=ListAuthor[j];
-                  window.alert("Thay doi tac gia roi ne");
+                  //window.alert("Thay doi tac gia roi ne");
                   break;
               }
           }
@@ -97,7 +97,7 @@
           }
           if(Url.search("price")>-1&&Url.search(fields)===-1)
           {
-              var ListOfPrice = ['duoi-5-tram', 'tu-5-tram-1-trieu', 'tren-1-trieu'];
+              var ListOfPrice = ['duoi-1-tram', 'tu-1-tram-5-tram', 'tren-5-tram'];
               var k;
               var Backup;
               for(k=0;k<ListOfPrice.length;k++)
@@ -156,8 +156,8 @@
               }
           }
       }
-      window.alert("Chay vao day ne");
-      window.alert(Url);
+      //window.alert("Chay vao day ne");
+      //window.alert(Url);
       window.location.href=Url;
 
   }
