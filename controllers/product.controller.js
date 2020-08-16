@@ -8,7 +8,7 @@ module.exports.index = async function (req, res, next) {
     let sql = 'select * from book';
     let result = await query(sql);
     result = JSON.parse(JSON.stringify(result));
-    res.render('index', { products: result.slice(0, 5) });
+    res.render('index', { products: result.slice(0, 4), hotbook:result.slice(4, 8), chooseforme: result.slice(8, 12),  });
   } catch (error) {
     next(error)
   }

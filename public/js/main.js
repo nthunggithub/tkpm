@@ -1,7 +1,7 @@
 
     function FIlter(b,c)
     {
-
+        
         const TypeOfFields=b;
         const fields=c;
         let Category = document.getElementById("myBtnContainer").value;
