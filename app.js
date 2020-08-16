@@ -16,10 +16,6 @@ require("./config/passport");
 require("./config/handlebars");
 var app = express();
 
-
-//mongoose.connect('mongodb://localhost/shopping');
-//mongoose.connect(process.env.MONGO_ATLAS);
-mongoose.connect("mongodb+srv://admin:adminpassword@tanhung-o7d5l.mongodb.net/shopping?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true })
 app.engine( 'hbs', exphbs( {
   extname: 'hbs',
   defaultView: 'default',
@@ -45,13 +41,9 @@ var query = require('./models/db');
 app.post('/reduce/:id', async function(req, res, next) {
   const productId = req.params.id;
   const qty = req.body.qty; 
-  // var cart = new Cart(req.session.cart ? req.session.cart : {});
-  // cart.reduce(productId, qty);
-  // req.session.cart = cart;
   let amount;
   if(req.isAuthenticated()){
     var cartuser;
-    //cartuser = await CartUser.findOne({user: req.user});
     let cartorder = await query('select * from orders where ID_Customer = ? and Status = 0',[req.user.ID_Customer] );
     cartuser = await query('select * from detail_order where ID_Order = ? and ID_Book = ?',[cartorder[0].ID_Order, productId])
     let newprice = cartuser[0].Price/cartuser[0].Quantity_DetailOrder * qty;

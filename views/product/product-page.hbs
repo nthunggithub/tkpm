@@ -1,19 +1,9 @@
 <!-- BREADCRUMB -->
+<link rel="stylesheet" href="/css/productfilter.css">
 
 <head>
 	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-
 </head>
-<div id="breadcrumb">
-	<div class="container">
-		<ul class="breadcrumb">
-			<li><a href="#">Trang chủ</a></li>
-			<li><a href="#">Sản phẩm</a></li>
-			<li class="text-capitalize"><a href="#">{{data.NameCategory}}</a></li>
-			<li class="active" class="text-capitalize">{{data.NameBook}}</li>
-		</ul>
-	</div>
-</div>
 <!-- /BREADCRUMB -->
 
 <!-- section -->
@@ -27,7 +17,7 @@
 				<div class="col-md-6">
 					<div id="product-main-view">
 						<div class="product-view">
-							<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{data.imagePath}}" alt="">
+							<img src="{{data.imagePath}}" alt="">
 						</div>
 					</div>
 
@@ -56,11 +46,12 @@
 						</div>
 						{{!-- <p><strong>Số lần xem trang:</strong> <span class="text-capitalize">{{countview}}</span></p> --}}
 						{{!-- <p><strong>Availability:</strong> In Stock</p> --}}
-						<p><strong>Số lượng còn lại:</strong> <span class="text-capitalize">{{data.Quantity_Book}}</span></p>
-						<p><strong>Nhà sản xuất:</strong> <span class="text-uppercase">{{data.NamePublisher}}</span></p>
+						<p><strong>Thể loại:</strong> <span class="text-uppercase">{{data.NameCategory}}</span></p>
 						<p><strong>Tác giả:</strong> <span class="text-uppercase">{{data.NameAuthor}}</span></p>
-						<p><strong>Danh mục:</strong> <span class="text-uppercase">{{data.NameCategory}}</span></p>
-						<p>{{data.description}}</p>
+						<p><strong>Nhà sản xuất:</strong> <span class="text-uppercase">{{data.NamePublisher}}</span></p>
+						<p><strong>Số lượng còn lại:</strong> <span
+								class="text-capitalize">{{data.Quantity_Book}}</span></p>
+						<p>{{data.DescriptionBook}}</p>
 						<div class="">
 							<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
 							<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
@@ -148,7 +139,7 @@
 												<input class="input" type="text" placeholder="Your Name" id="name"
 													name="name" />
 											</div> --}}
-											<h3 class = "text-danger">Vui lòng đăng nhập để viết bình luận</h3>
+											<h3 class="text-danger">Vui lòng đăng nhập để viết bình luận</h3>
 											{{/if}}
 											{{!-- <div class="form-group">
 													<input class="input" type="email" placeholder="Email Address" />
@@ -170,10 +161,10 @@
 														</div>
 													</div>
 												</div> --}}
-												{{#if isAuthenticated}}
-												<button class="primary-btn" type="submit" id="submitcomment">Submit</button>
+											{{#if isAuthenticated}}
+											<button class="primary-btn" type="submit" id="submitcomment">Submit</button>
 											{{/if}}
-											
+
 										</form>
 									</div>
 								</div>
@@ -217,53 +208,56 @@
 			<!-- section title -->
 			<div class="col-md-12">
 				<div class="section-title">
-					<h2 class="title">Sản phẩm liên quan</h2>
+					<h2 class="title">Có thể bạn quan tâm</h2>
 				</div>
 			</div>
 			<!-- section title -->
 
 			<!-- Product Single -->
 
-			<div class="row">
-				{{#each products}}
-				<a href="{{this._id}}">
-					<div class="col-md-4 col-sm-6 col-xs-6 portfolio  {{this.cat}} {{this.producer}}">
-						<div class="product product-single">
-							<div class="product-thumb">
-								{{#ifCond 0 Discount}}
-								{{else}}
-								<div class="product-label">
-									<span>Mới</span>
-									<span class="sale">Giảm {{Discount}} %</span>
+			<div id="store" id="portfoliolist">
+				<div class="row">
+					{{#each products}}
+					<a href="{{ID_Book}}">
+						<div class="col-md-4 col-sm-6 col-xs-6 portfolio  {{this.cat}} {{this.producer}}">
+							<div class="product product-single">
+								<div class="product-thumb">
+									{{#ifCond 0 Discount}}
+									{{else}}
+									<div class="product-label">
+										<span>Mới</span>
+										<span class="sale">Giảm {{Discount}} %</span>
+									</div>
+									{{/ifCond}}
+									<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick
+										view</button>
+									<img src="{{this.imagePath}}" alt="">
 								</div>
-								{{/ifCond}}
-								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick
-									view</button>
-								<img src="https://admin1712482-1712509-1712528.herokuapp.com/{{this.imagePath}}" alt="">
-							</div>
-							<div class="product-body">
-								<h3 class="product-price">{{convertmoney Price Discount}}<del
-										class="product-old-price">{{convertmoney Price 0}}</del></h3>
-								<div class="product-rating">
-									<i class="fa fa-star"></i></br>
-									<i class="fa fa-star"></i></br>
-									<i class="fa fa-star"></i></br>
-									<i class="fa fa-star"></i></br>
-									<i class="fa fa-star-o empty"></i>
-								</div>
-								<div id="idname">
-									<h2 class="product-name"><a href="{{_id}}">{{NameBook}}</a></h2>
-								</div>
-								<div class="product-btns">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Thêm vào
-										giỏ hàng</button>
+								<div class="product-body">
+									<h3 class="product-price">{{convertmoney Price Discount}}<del
+											class="product-old-price">{{convertmoney Price 0}}</del></h3>
+									<div class="product-rating">
+										<i class="fa fa-star"></i></br>
+										<i class="fa fa-star"></i></br>
+										<i class="fa fa-star"></i></br>
+										<i class="fa fa-star"></i></br>
+										<i class="fa fa-star-o empty"></i>
+									</div>
+									<div id="idname">
+										<h2 class="product-name"><a href="{{ID_Book}}">{{NameBook}}</a></h2>
+									</div>
+									<div class="product-btns">
+										<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+										<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Thêm
+											vào
+											giỏ hàng</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</a>
-				{{/each}}
+					</a>
+					{{/each}}
+				</div>
 			</div>
 		</div>
 		<!-- /Product Single -->
