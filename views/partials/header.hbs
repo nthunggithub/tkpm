@@ -5,7 +5,7 @@
 					<!-- Logo -->
 					<div class="header-logo">
 						<a class="logo" href="/">
-							<img src="/img/logo.png" alt="">
+							<h1 style="color: red">H2K<span style="color: black">-BOOKS</span></h1>
 						</a>
 					</div>
 					<!-- /Logo -->
@@ -13,7 +13,7 @@
 					<!-- Search -->
 					<div class="header-search">
 						<form action="/products" method="get">
-							<input class="input search-input" type="text" placeholder="Enter để search" name="search">
+							<input class="input search-input" type="text" placeholder="Nội dung tìm kiếm ..." name="search">
 							
 							<button class="search-btn"><i class="fa fa-search"></i></button>
 							<input type="submit" hidden />
@@ -51,7 +51,6 @@
 							<ul class="custom-menu">
 								<li><a href="./profile"><i class="fa fa-user-o"></i> Tài khoản</a></li>
 								<li><a href="/status-produts"><i class="fa fa-exchange"></i>Đơn mua</a></li>
-								{{!-- <li><a href="/checkout"><i class="fa fa-check"></i> Thanh toán</a></li> --}}
 								<li><a href="/update-password"><i class="fa fa-key"></i> Đổi mật khẩu</a></li>
 								<li><a href="/logout"><i class="fa fa-unlock-alt"></i> Đăng xuất</a></li>
 							</ul>
@@ -81,9 +80,10 @@
 		<div class="container">
 			<div id="responsive-nav">
 				<!-- category nav -->
-				{{!-- <div class="category-nav show-on-click">
-					<span class="category-header">Header</i></span>
-				</div> --}}
+				<div class="category-nav show-on-click">
+					<span class="category-header">DANH MỤC <i class="fa fa-list"></i></span>
+				</div>
+				
 				<!-- /category nav -->
 
 				<!-- menu nav -->
@@ -91,7 +91,7 @@
 					<span class="menu-header">Menu <i class="fa fa-bars"></i></span>
 					<ul class="menu-list">
 						<li><a href="/">Trang chủ</a></li>
-						<li><a href="/products">Danh sách sản phẩm</a></li>
+						<li><a href="/products">Sách</a></li>
 					</ul>
 				</div>
 				<!-- menu nav -->

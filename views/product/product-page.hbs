@@ -4,16 +4,6 @@
 	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 
 </head>
-<div id="breadcrumb">
-	<div class="container">
-		<ul class="breadcrumb">
-			<li><a href="#">Trang chủ</a></li>
-			<li><a href="#">Sản phẩm</a></li>
-			<li class="text-capitalize"><a href="#">{{data.NameCategory}}</a></li>
-			<li class="active" class="text-capitalize">{{data.NameBook}}</li>
-		</ul>
-	</div>
-</div>
 <!-- /BREADCRUMB -->
 
 <!-- section -->
@@ -56,10 +46,10 @@
 						</div>
 						{{!-- <p><strong>Số lần xem trang:</strong> <span class="text-capitalize">{{countview}}</span></p> --}}
 						{{!-- <p><strong>Availability:</strong> In Stock</p> --}}
-						<p><strong>Số lượng còn lại:</strong> <span class="text-capitalize">{{data.Quantity_Book}}</span></p>
-						<p><strong>Nhà sản xuất:</strong> <span class="text-uppercase">{{data.NamePublisher}}</span></p>
+						<p><strong>Thể loại:</strong> <span class="text-uppercase">{{data.NameCategory}}</span></p>
 						<p><strong>Tác giả:</strong> <span class="text-uppercase">{{data.NameAuthor}}</span></p>
-						<p><strong>Danh mục:</strong> <span class="text-uppercase">{{data.NameCategory}}</span></p>
+						<p><strong>Nhà sản xuất:</strong> <span class="text-uppercase">{{data.NamePublisher}}</span></p>
+						<p><strong>Số lượng còn lại:</strong> <span class="text-capitalize">{{data.Quantity_Book}}</span></p>
 						<p>{{data.description}}</p>
 						<div class="">
 							<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
@@ -217,7 +207,7 @@
 			<!-- section title -->
 			<div class="col-md-12">
 				<div class="section-title">
-					<h2 class="title">Sản phẩm liên quan</h2>
+					<h2 class="title">Có thể bạn quan tâm</h2>
 				</div>
 			</div>
 			<!-- section title -->
