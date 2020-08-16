@@ -19,16 +19,6 @@ module.exports.products = async function (req, res, next) {
   let page = req.query.page || 1;
 
   let querygender = {};
-  // if (req.query.gender != undefined) {
-  //   if (req.query.gender === "Nam") {
-  //     querygender = { gender: "nam" };
-  //   }
-  //   else {
-  //     querygender = { gender: "nữ" }
-  //   }
-  // }
-
-
 
   let querysortprice = {};
   if (req.query.SortPrice == "gia-giam") {
@@ -38,96 +28,27 @@ module.exports.products = async function (req, res, next) {
   }
 
   const producttype = req.query.Category;
-  const author = req.query.Producer;
-  //console.log(producttype);
-  //console.log(brand);
-  //let queryAuthor = {};
+  const author = req.query.Author;
+  const price = req.query.price;
   let queryfilter = {};
-  queryfilter['cat'] = '';
-  queryfilter['author'] = '';
-  queryfilter['price'] = {};
-  if (producttype === 'all1')
-    queryfilter['cat'] = '';
-  else if (producttype === 'Cap') {
-    queryfilter['cat'] = '';
-  } else if (producttype === 'Giay') {
-    queryfilter['cat'] = '';
-  } else if (producttype === 'Vi') {
-    queryfilter['cat'] = '';
-  } else if (producttype === 'Dongho') {
-    queryfilter['cat'] = '';
-  }
-
-  if (author === 'all2')
-    queryfilter['author'] = '';
-  else if (author === 'ten tac gia') {
-    queryfilter['author'] = 'ten tac gia';
-  } else if (author === 'manzo') {
-    queryfilter['author'] = '';
-  } else if (author === 'slimheel') {
-    queryfilter['author'] = '';
-  } else if (author === 'apple') {
-    queryfilter['author'] = '';
-  } else if (author === 'samsung') {
-    queryfilter['author'] = '';
-  }
-
-  let price = req.query.price;
-  //console.log(price);
-  // let queryprice = {};
-
-  // if (price == "duoi-5-tram")
-  //   queryprice = { price: { $lte: 500000 } }
-  // else if (price == "tu-5-tram-1-trieu") {
-  //   queryprice = { price: { $gte: 500000, $lte: 1000000 } }
-  // } else if (price == "tren-1-trieu") {
-  //   queryprice = { price: { $gte: 1000000 } }
-  // }
-  if (price == "duoi-5-tram")
-    queryfilter[price] = { lte: 500000, gte: 0 };
-
-
+  queryfilter['cat'] = "";
+  queryfilter['author'] = "";
+  queryfilter['price']={};
+  if (producttype!==undefined)
+    queryfilter['cat'] = producttype;
+  if(author!==undefined)
+    queryfilter['author']=author;
+  if(price!==undefined)
+    queryfilter['price']=price;
+  
   var search = req.query.search;
   var querysearch = {};
   if (search != undefined) {
     querysearch = { productname: { $regex: req.query.search, $options: 'i' } };
   }
-  // let sql = 'select * from book';
-  // if (queryproduct.cat != undefined) {
-  //   sql += ' where ID_Publisher = ' + queryproduct.cat;
-  // }
-  // if(querybrand.cat != undefined){
-  //   sql += ' where ID_Publisher = ' + queryproduct.cat;
-  // }
-  // if(queryprice.cat != undefined){
-  //   sql += ' where ID_Publisher = ' + queryproduct.cat;
-  // }
-  // if(querygender.cat != undefined){
-  //   sql += ' where ID_Publisher = ' + queryproduct.cat;
-  // }
-
-  // db.query(sql, (err, result) => {
-  //   console.log(result);
-  // })
-
-  // Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).skip((perPage * c) - perPage).limit(perPage).sort(querysortprice)
-  //   .exec((err, data) => {
-  //     Product.find(queryproduct).find(querybrand).find(queryprice).find(querygender).find(querysearch).count().exec((err, count) => {
-  //       if (err) {
-  //         return next(err);
-  //       }
-  //       res.render('product/products', { title: 'Express', products: data, currentpage: page, total_page: Math.ceil(count / perPage), producttype: producttype, brand: brand });
-  //     })
-  //   })
-  //data = await query('select * from book b inner join author a where a.ID_Author = b.ID_Author');
-  // let data = await query('select * from book LIMIT ? OFFSET ?', [perPage, page - 1]);
+ 
   let data = await query('select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category'
     + ' and a.ID_Author = b.ID_Author');
-  // if(queryproduct.cat != undefined && queryAuthor.author == undefined)
-  //  data = await query('select * from book b inner join author a where a.ID_Author = b.ID_Author and a.NameAuthor = ?', [queryproduct.cat]);
-  // else if(queryproduct.cat == undefined && queryAuthor.author != undefined)
-
-  //let books = Json.parse(Json.stringify(data));
   let products = [];
   let books = JSON.parse(JSON.stringify(data));
   for (let book of books) {

@@ -1,170 +1,166 @@
 
-    function FIlter(b,c)
+     function FIlter(b,c)
     {
+        
+      const TypeOfFields=b;
+      const fields=c;
+      let Category = document.getElementById("myBtnContainer").value;
+      let xCategory= document.getElementById("myBtnContainer");
+      let Author = document.getElementById("myBtnproducer").value;
+      let xAuthor=document.getElementById("myBtnproducer");
+      let Url=decodeURIComponent(window.location.href);
+      window.alert(Url);
+      let location=false;
+      let ListCategory = [];
+      let ListAuthor=[];
+      for (i = 0; i < xCategory.options.length; i++) {
+          ListCategory.push(xCategory.options[i].value);
+      }
+      for (i = 0; i < xAuthor.options.length; i++) {
+          ListAuthor.push(xAuthor.options[i].value);
+      }
+      if(Url.search('search')>-1)
+          location=true
 
-        const TypeOfFields=b;
-        const fields=c;
-        let Category = document.getElementById("myBtnContainer").value;
-        let Producer = document.getElementById("myBtnproducer").value;
-        let Url=window.location.href;
-        let location=false;
-        if(Url.search('search')>-1)
-            location=true
-        if(Url.search("Category")===-1&&Category!==undefined)
-        {
-            if(location===true)
-            {
-                Url=Url+"&Category="+(Category);
-            }
-            else
-            {
-                if(Url[Url.search('products'+8)]===undefined)
-                {
-                    Url=Url+"?Category="+(Category);
-                }
-                else
-                {
-                    Url=Url+"&Category="+(Category);
-                }
-            }
-        }
-        if(Url.search("Category")>-1&&Url.search(Category)===-1)
-        {
+      if(Url.search("Category")===-1&&Category!==undefined)
+      {        
+              if(Url[Url.search('products'+8)]===undefined)
+              {
+                  Url=Url+"?Category="+(Category);
+              }
+              else
+              {
+                  Url=Url+"&Category="+(Category);
+              }
+      }
+      if(Url.search("Category")>-1&&Url.search(Category)===-1)
+      {
+          let backup;
+          window.alert("Thay doi loai san pham");
+          var i;
+          for(i=0;i<ListCategory.length;i++)
+          {
+              if(Url.search(ListCategory[i])>-1)
+              {
+                  backup=ListCategory[i];
+                  window.alert("Thay doi roi ne");
+                  break;
+              }
+          }
+          
+           Url=Url.replace(backup,Category);
+      }
 
+      if(Url.search("Author")===-1&&Author!==undefined)
+      {
+          // var temp=Url.search('products')+8;
+          // alert(Url[temp]);
+        
+          if(Url[Url.search('Author')+8]===undefined)
+          {
+              Url=Url+"?Author="+Author;
+          }
+          else
+          {
+              Url=Url+"&Author="+Author;
+          }
+      }
+      if(Url.search("Author")>-1&&Url.search(Author)===-1)
+      {
+          let backup;
+          var j=0;
+          for(j=0;j<ListAuthor.length;j++)
+          {
+              if(Url.search(ListAuthor[j])>-1)
+              {
+                  backup=ListAuthor[j];
+                  window.alert("Thay doi tac gia roi ne");
+                  break;
+              }
+          }
+          Url=Url.replace(backup,Author);
 
-            let backup;
-            var Array=['all1','Cap','Giay','Dongho','Vi'];
-            var i=0;
-            var index;
-            for(i=0;i<Array.length;i++)
-            {
-                if(Url.search(Array[i])>-1)
-                {
-                    index=Url.search(Array[i]);
-                    backup=Array[i];
-                    break;
-                }
-            }
-            // console.log(backup);
-            // console.log(Category);
+      }
 
-             Url=Url.replace(backup,Category);
+      if(TypeOfFields==="Gía")
+      {
+          if(Url.search("price")===-1&&Url.search(fields)===-1)
+          {
+              if(Url[Url.search('products')+8]===undefined)
+              {
+                  Url=Url+"?price="+fields;
+              }
+              else
+              {
+                  Url = Url + "&price=" + fields;
+              }
+          }
+          if(Url.search("price")>-1&&Url.search(fields)===-1)
+          {
+              var ListOfPrice = ['duoi-5-tram', 'tu-5-tram-1-trieu', 'tren-1-trieu'];
+              var k;
+              var Backup;
+              for(k=0;k<ListOfPrice.length;k++)
+              {
+                  if(Url.search(ListOfPrice[k])>-1)
+                  {
+                      Backup=ListOfPrice[k];
+                      break;
+                  }
+              }
+              Url=Url.replace(Backup,fields);
+          }
 
-        }
+      }
 
-        if(Url.search("Producer")===-1&&Producer!==undefined)
-        {
-            // var temp=Url.search('products')+8;
-            // alert(Url[temp]);
+      if(TypeOfFields==="Giới tính") {
 
-            if(Url[Url.search('products')+8]===undefined)
-            {
-                Url=Url+"?Producer="+Producer;
-            }
-            else
-            {
-                Url=Url+"&Producer="+Producer;
-            }
-        }
-        if(Url.search("Producer")>-1&&Url.search(Producer)===-1)
-        {
+          if (Url.search("gender") === -1 && Url.search(fields) === -1) {
+              if (Url[Url.search('products')+8]===undefined) {
+                  Url = Url + "?gender=" + fields;
+              } else {
+                  Url = Url + "&gender=" + fields;
+              }
+          }
+          if (Url.search("gender") > -1 && Url.search(fields) === -1) {
+              if (fields === "Nam") {
+                  //alert("chay vao r");
+                  Url=Url.replace("Nu", "Nam");
+              } else {
+                  Url=Url.replace("Nam", "Nu");
+              }
+          }
+      }
+      if(TypeOfFields==='Sap xep')
+      {
+          if(Url.search("SortPrice")===-1&&fields!==undefined)
+          {
+              if (Url[Url.search('products')+8]===undefined) {
+                  Url = Url + "?SortPrice=" + fields;
+              } else {
+                  Url = Url + "&SortPrice=" + fields;
+              }
+          }
+          if(Url.search("SortPrice")>-1&&Url.search(fields)===-1)
+          {
 
+              if(fields==="gia-tang")
+              {
 
-            let backup;
-            var Array2=['all2','vanoca','manzo','slimheel','apple','samsung'];
-            var j;
-            for(j=0;j<Array2.length;j++)
-            {
-                if(Url.search(Array2[j])>-1)
-                {
+                  Url=Url.replace("gia-giam","gia-tang");
+              }
+              else
+              {
 
-                    backup=Array2[j];
-                    break;
-                }
-            }
+                  Url=Url.replace("gia-tang","gia-giam");
+              }
+          }
+      }
+      window.alert("Chay vao day ne");
+      window.alert(Url);
+      window.location.href=Url;
 
-            Url=Url.replace(backup,Producer);
-
-        }
-
-        if(TypeOfFields==="Gía")
-        {
-
-            if(Url.search("price")===-1&&Url.search(fields)===-1)
-            {
-                if(Url[Url.search('products')+8]===undefined)
-                {
-                    Url=Url+"?price="+fields;
-                }
-                else
-                {
-                    Url = Url + "&price=" + fields;
-                }
-            }
-            if(Url.search("price")>-1&&Url.search(fields)===-1)
-            {
-                var ListOfPrice = ['duoi-5-tram', 'tu-5-tram-1-trieu', 'tren-1-trieu'];
-                var k;
-                var Backup;
-                for(k=0;k<ListOfPrice.length;k++)
-                {
-                    if(Url.search(ListOfPrice[k])>-1)
-                    {
-                        Backup=ListOfPrice[k];
-                        break;
-                    }
-                }
-                Url=Url.replace(Backup,fields);
-            }
-
-        }
-
-        if(TypeOfFields==="Giới tính") {
-
-            if (Url.search("gender") === -1 && Url.search(fields) === -1) {
-                if (Url[Url.search('products')+8]===undefined) {
-                    Url = Url + "?gender=" + fields;
-                } else {
-                    Url = Url + "&gender=" + fields;
-                }
-            }
-            if (Url.search("gender") > -1 && Url.search(fields) === -1) {
-                if (fields === "Nam") {
-                    //alert("chay vao r");
-                    Url=Url.replace("Nu", "Nam");
-                } else {
-                    Url=Url.replace("Nam", "Nu");
-                }
-            }
-        }
-        if(TypeOfFields==='Sap xep')
-        {
-            if(Url.search("SortPrice")===-1&&fields!==undefined)
-            {
-                if (Url[Url.search('products')+8]===undefined) {
-                    Url = Url + "?SortPrice=" + fields;
-                } else {
-                    Url = Url + "&SortPrice=" + fields;
-                }
-            }
-            if(Url.search("SortPrice")>-1&&Url.search(fields)===-1)
-            {
-
-                if(fields==="gia-tang")
-                {
-
-                    Url=Url.replace("gia-giam","gia-tang");
-                }
-                else
-                {
-
-                    Url=Url.replace("gia-tang","gia-giam");
-                }
-            }
-        }
-        window.location.href=Url;
-
-    }
+  }
 (function($) {
   "use strict"
 
