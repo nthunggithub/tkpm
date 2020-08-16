@@ -173,7 +173,6 @@ module.exports.productpage = async (req, res, next) => {
     // console.log(req.session.countview);
     let sql = 'select * from book where ID_Publisher = ' + data[0].ID_Publisher;
     const products = await query(sql);
-    console.log(products);
     //ket thuc sua
 
     result = await products.filter(element => element.ID_Book !== data[0].ID_Book);
@@ -184,12 +183,7 @@ module.exports.productpage = async (req, res, next) => {
     sql = 'select UserName, Comment, DateComment from comment co inner join customer cu where co.ID_Customer = cu.ID_Customer and ID_Book = ? LIMIT ? OFFSET ?';
     let comments = await query(sql, [req.params.id, perPage, page - 1]);
 
-
-    // let comments = await Comment.find({ postId: data.id }).skip((perPage * page) - perPage).limit(perPage);
-    // let count = await Comment.find({ postId: data.id }).count().exec();
-    //result.splice(Math.floor(Math.random() * products.length), 3)
-
-
+    result=result.slice(0,6);
     res.render('product/product-page', {
       data: data[0], products: result, comments: comments, currentpage: page, total_page: Math.ceil(count / perPage)
     });//, countview: countview.showtoOne(data._id)
