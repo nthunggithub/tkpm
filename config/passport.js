@@ -1,9 +1,9 @@
 var passport = require('passport');
-var User = require('../models/User');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
 const mysql = require("mysql");
 var util = require('util');
+const customer = require('../models/customer');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -33,7 +33,7 @@ passport.deserializeUser(function (id, done) {
         const test = [];
         //const x  = await User.findOne({ username: 'nthungnt2608' });
         result = data[0];
-        let user = new User();
+        let user = new customer();
         user.ID_Customer = result.ID_Customer;
         user.UserName = result.UserName;
         user.PassWord = result.PassWord;

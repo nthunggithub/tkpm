@@ -1,9 +1,9 @@
-var User = require("../models/User")
 var randomstring = require("randomstring")
 var bcrypt = require('bcrypt-nodejs')
 var mailer = require('../config/mailer')
 require('dotenv').config();
 var query = require('../models/db');
+var customer = require('../models/customer');
 // Xử lí đăng kí tài khoản mật khẩu
 
 
@@ -12,9 +12,6 @@ module.exports.signup = function (req, res, next) {
     req.session.errors = null;
 };
 exports.signuppost = async function (req, res, next) {
-    // let user=new User();
-    // user.username=req.body.username;
-    // user.email=req.body.email;
     let user = {};
     user.password = req.body.password;
     user.UserName = req.body.username;
@@ -39,7 +36,8 @@ exports.signuppost = async function (req, res, next) {
     }
 
     else if (user.password == req.body.confirm) {
-        var hash = new User();
+        //var hash = new User();
+        let hash = new customer();
         user.password = hash.hashPassword(user.password);
     }
 
@@ -98,7 +96,8 @@ exports.signuppost = async function (req, res, next) {
             await mailer.sendEmail(process.env.usermailer, user.Email, 'Please verify your email!', html);
             success = true;
             req.flash('success', 'Please check your email.');
-            await query('INSERT INTO customer SET ? ', user);
+            //await query('INSERT INTO customer SET ? ', user);
+            await customer.addcustomer(user);
             res.redirect('/');
         } catch (err) {
             next(err);
@@ -126,8 +125,6 @@ module.exports.logout = function (req, res) {
 module.exports.verify = async function (req, res, next) {
     try {
         const secretToken = req.params.id;
-
-       // const user = await User.findOne({ 'secretToken': secretToken });
         const user = await query('select * from customer where SecretToken = ? ', [secretToken]);
         
         if (user.length == 0) {
@@ -162,10 +159,7 @@ module.exports.forgotpassword = function (req, res, next) {
 
 module.exports.forgotpasswordpost = async function (req, res, next) {
     try {
-
         const email = req.body.email;
-
-        //const user = await User.findOne({ 'email': email });
         let user = await query('SELECT * FROM customer where Email = ?',[email]);
         if (user.length == 0) {
             req.flash("check", "Email không tồn tại")
@@ -173,10 +167,7 @@ module.exports.forgotpasswordpost = async function (req, res, next) {
             console.log('quen mat khau khong ton tai email')
             return;
         }
-
         user.SecretToken = randomstring.generate();
-
-        //await user.save();
         await query('update customer set SecretToken = ? where Email = ?', [user.SecretToken, email]);
         const html = `Xin chào ${user.UserName},
       <br/>
@@ -204,8 +195,7 @@ module.exports.forgotpasswordpost = async function (req, res, next) {
 module.exports.forgotpasswordverify = async function (req, res, next) {
     try {
         //var user = await User.updateOne({ secretToken: req.params.id }, { $set: { password: bcrypt.hashSync("123456", bcrypt.genSaltSync(10)) }, secretToken: "" });
-        await query('update PassWord = ? where SecretToken = ?', [bcrypt.hashSync("123456", bcrypt.genSaltSync(10)), req.params.id]);
-        console.log(user);
+        await query('update customer set PassWord = ?, SecretToken = ? where SecretToken = ?', [bcrypt.hashSync("123456", bcrypt.genSaltSync(10)),"", req.params.id]);
         res.redirect('/');
     } catch (err) {
         next(err);
@@ -220,11 +210,8 @@ module.exports.profile = function (req, res, next) {
 module.exports.profileupdate = async function (req, res, next) {
 
     try {
-        //var user = await User.findById(req.user._id);
         let user = {};
-        //var user = await query('');
         if (req.user.Email != req.body.email) {
-            //var useremail = await User.findOne({ email: req.body.email });
             var useremail = await query('SELECT * FROM customer where Email = ?',[req.body.email] );
             if (useremail.length == 0) {
                 //user.email = req.body.email;
@@ -253,12 +240,9 @@ module.exports.profileupdate = async function (req, res, next) {
         user.Gender = req.body.gender;
         user.Address = req.body.nickname;
         user.Birthday = req.body.date;
-        // if (req.body.date != "") {
-        //     user.age = new Date().getFullYear() - req.body.date.split('-')[0];
-        // }
-        await query('update customer set FullName = ?, Phone = ?, Gender = ?,Address = ?, Birthday=?, Email = ?'+
-        ' where ID_Customer = ?', [req.body.name, req.body.phonenumber, req.body.gender, req.body.address, req.body.date, req.body.email, req.user.ID_Customer])
-        //await user.save();
+        // await query('update customer set FullName = ?, Phone = ?, Gender = ?,Address = ?, Birthday=?, Email = ?'+
+        // ' where ID_Customer = ?', [req.body.name, req.body.phonenumber, req.body.gender, req.body.address, req.body.date, req.body.email, req.user.ID_Customer])
+        await customer.updateCustomer(req.body.name, req.body.phonenumber, req.body.gender, req.body.address, req.body.date, req.body.email, req.user.ID_Customer);
         res.redirect('/profile');
     } catch (error) {
         next(error);
@@ -268,7 +252,6 @@ module.exports.profileupdate = async function (req, res, next) {
 module.exports.editprofile = function (req, res, next) {
     res.render('users/updateprofile', { message: req.flash("messageupdateprofile"), user: req.user });
 }
-
 
 module.exports.updatepassword = function (req, res, next) {
     res.render('account/update-password', { layout: 'layout-account.hbs', errorupdatePass: req.flash("errorupdatePass") });
@@ -280,8 +263,8 @@ module.exports.updatepasswordpost = async function (req, res, next) {
         let newpassword = req.body.newpassword;
         let confirmpassword = req.body.confirm;
 
-        //var user = await User.findById(req.user._id)
-        let user = new User();
+        //let user = new User();
+        let user = new customer();
         let datauser = await query('select * from customer where UserName = ?', req.user.UserName);
         
         if (!user.comparePassword(oldpassword, datauser[0].PassWord)) {
@@ -298,7 +281,6 @@ module.exports.updatepasswordpost = async function (req, res, next) {
         user.password = user.hashPassword(newpassword);
 
         await query('update customer set PassWord = ? where UserName = ?', [user.password, req.user.UserName]);
-        //await user.save();
         req.flash("errorupdatePass", "Mật khẩu đã thay đổi");
         res.redirect("/update-password");
         return;

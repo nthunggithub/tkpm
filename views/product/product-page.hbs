@@ -54,9 +54,9 @@
 								<i class="fa fa-star-o empty"></i>
 							</div>
 						</div>
-						<p><strong>Số lần xem trang:</strong> <span class="text-capitalize">{{countview}}</span></p>
+						{{!-- <p><strong>Số lần xem trang:</strong> <span class="text-capitalize">{{countview}}</span></p> --}}
 						{{!-- <p><strong>Availability:</strong> In Stock</p> --}}
-						<p><strong>Số lượng còn lại:</strong> <span class="text-capitalize">{{data.Quantity}}</span></p>
+						<p><strong>Số lượng còn lại:</strong> <span class="text-capitalize">{{data.Quantity_Book}}</span></p>
 						<p><strong>Nhà sản xuất:</strong> <span class="text-uppercase">{{data.NamePublisher}}</span></p>
 						<p><strong>Tác giả:</strong> <span class="text-uppercase">{{data.NameAuthor}}</span></p>
 						<p><strong>Danh mục:</strong> <span class="text-uppercase">{{data.NameCategory}}</span></p>
@@ -230,11 +230,11 @@
 					<div class="col-md-4 col-sm-6 col-xs-6 portfolio  {{this.cat}} {{this.producer}}">
 						<div class="product product-single">
 							<div class="product-thumb">
-								{{#ifCond 0 data.Discount}}
+								{{#ifCond 0 Discount}}
 								{{else}}
 								<div class="product-label">
 									<span>Mới</span>
-									<span class="sale">Giảm {{data.Discount}} %</span>
+									<span class="sale">Giảm {{Discount}} %</span>
 								</div>
 								{{/ifCond}}
 								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick

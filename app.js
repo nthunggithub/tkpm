@@ -11,8 +11,6 @@ var expressSession=require('express-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
-var Cart = require('./models/cart');
-var CartUser = require('./models/sessionuser');
 require('dotenv').config();
 require("./config/passport");
 require("./config/handlebars");

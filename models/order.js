@@ -1,15 +1,17 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var query = require('../models/db');
+class order{
+    static async updateStatusOrder(status, idorder){
+        await query('update orders set Status = ? where ID_Order = ?', [status, idorder]);
+    }
+    static async deleteOrder(idorder){
+        await query('delete from orders where ID_Order = ?', [idorder]);
+    }
+    static async addOrder(ID_Customer, createprice){
+        await query('insert into orders set ? ', {
+            ID_Customer: ID_Customer, DateCreated: new Date(),
+            Amount: createprice, TypePayment: "", Address: "", Name: "", Phone: "", Status: 0
+          });
+    }
+}
 
-var schema = new Schema({
-    user: {type: Schema.Types.ObjectId, ref: 'users'},
-    cart: {type: Object, required: true},
-    address: {type: String, required: true},
-    name: {type: String, required: true},
-    phonenumber: {type: String, required: true},
-    status: {type: Number, default: 0, min: 0, max: 3},
-    methodpay: {type: Number, default: 0, min: 0, max: 1},
-    date: {type: String},
-})
-
-module.exports = mongoose.model('Order', schema);
+module.exports = order
