@@ -6,15 +6,15 @@ var util = require('util');
 const customer = require('../models/customer');
 require('dotenv').config();
 
-var db=mysql.createConnection({
-    host :  'localhost',
-    user :  'root',  
-    password : process.env.passmysql,
-    database : 'shopping'
-  });
-  db.connect((err)=>{
+var db = mysql.createConnection({
+    host: process.env.host,
+    user: process.env.user,
+    password: process.env.password,
+    database: process.env.database
+});
+db.connect((err) => {
 
-    if(err){
+    if (err) {
         throw err;
     }
     console.log('Mysql Connected')
@@ -26,7 +26,7 @@ passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser( async function (id, done) {
+passport.deserializeUser(async function (id, done) {
     const sql = 'SELECT * FROM customer where ID_Customer = ?';
     db.query(sql, id, (err, data) => {
         result = data[0];
