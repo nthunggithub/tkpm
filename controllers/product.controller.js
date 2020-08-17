@@ -15,8 +15,8 @@ module.exports.index = async function (req, res, next) {
 };
 
 module.exports.products = async function (req, res, next) {
-  var perPage = 9;
-  let page = req.query.page || 1;
+ var perPage=9;
+  let page= req.query.page || 1;
 
   let querysortprice = {};
   if (req.query.SortPrice == "gia-giam") {
@@ -24,7 +24,6 @@ module.exports.products = async function (req, res, next) {
   } else if (req.query.SortPrice == "gia-tang") {
     querysortprice = { price: 1 }
   }
-
   const producttype = req.query.Category;
   const author = req.query.Author;
   const price = req.query.price;
