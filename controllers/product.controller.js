@@ -1,6 +1,6 @@
 var query = require('../models/db');
 var ordermodel = require('../models/order');
-
+var bookmodel = require('../models/book');
 module.exports.index = async function (req, res, next) {
   try {
     let sql = 'select * from book';
@@ -16,76 +16,13 @@ module.exports.products = async function (req, res, next) {
  var perPage=9;
   let page= req.query.page || 1;
 
-  let querysortprice = {};
-  if (req.query.SortPrice == "gia-giam") {
-    querysortprice = { price: -1 }
-  } else if (req.query.SortPrice == "gia-tang") {
-    querysortprice = { price: 1 }
-  }
   const producttype = req.query.Category;
   const author = req.query.Author;
-  const price = req.query.price;
-  let queryfilter = {};
-  queryfilter['cat'] = "all1";
-  queryfilter['author'] = "all2";
-  queryfilter['price']={};
-  if (producttype!==undefined)
-    queryfilter['cat'] = producttype;
-  if(author!==undefined)
-    queryfilter['author']=author;
-  if(price!==undefined){
-    if(price === 'duoi-1-tram'){
-      queryfilter.price['gte'] = 0;
-      queryfilter.price['lte'] = 100000;
-    }else if(price == 'tu-1-tram-5-tram'){
-      queryfilter.price['gte'] = 100000;
-      queryfilter.price['lte'] = 500000;
-    }else if(price == 'tren-5-tram'){
-      queryfilter.price['gte'] = 500000;
-      queryfilter.price['lte'] = -1;
-    }
-  }
-  
-  
-  var search = req.query.search;
-  var querysearch = '';
-  let data;
-  if (search != undefined) {
-    querysearch = search;
-    data = await query(`select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category`
-    + ` and a.ID_Author = b.ID_Author and b.NameBook LIKE '%`+ search + `%'`);
-  }else{
-    data = await query('select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category'
-    + ' and a.ID_Author = b.ID_Author');
-  }
- 
-  
+
   let products = [];
-  let books = JSON.parse(JSON.stringify(data));
-  for (let book of books) {
-    if ((book.NameCategory == queryfilter.cat || queryfilter.cat == 'all1') && (book.NameAuthor == queryfilter.author || queryfilter.author == 'all2')) {
-      if (JSON.stringify(queryfilter.price) === '{}')
-        products.push(book);
-      else if((book.Price < queryfilter.price.lte && book.Price > queryfilter.price.gte)||
-      (queryfilter.price.lte == -1 && book.Price > queryfilter.price.gte)){
-        products.push(book);
-      }
-    }
-  }
-  Array.prototype.sortBy = function(p) {
-    return this.slice(0).sort(function(a,b) {
-      return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
-    });
-  }
-  //sap xep tang giam sort mang limitproducts
-  if(JSON.stringify(querysortprice) !== '{}'){
-    products = products.sortBy('Price')
-    if(querysortprice.price == -1){
-      products.reverse();
-    }
-  }
-
-
+  products = await bookmodel.searchBook(req.query.SortPrice,req.query.Category,
+    req.query.Author, req.query.price,req.query.search);
+  
   let count = products.length;
   const currentpage = (perPage * page) - perPage;
   const limitproducts = products.slice(currentpage, currentpage + perPage)
@@ -95,19 +32,7 @@ module.exports.products = async function (req, res, next) {
   const datalistcategory = await query('select * from category');
   res.render('product/products', { title: 'Express', products: limitproducts, currentpage: page, total_page: Math.ceil(count / perPage), producttype: producttype, brand: author, datalistauthor: datalistauthor, datalistcategory: datalistcategory });
 };
-function formatDate(date) {
-  var d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear();
 
-  if (month.length < 2)
-    month = '0' + month;
-  if (day.length < 2)
-    day = '0' + day;
-
-  return [day, month, year].join('-');
-}
 module.exports.productpage = async (req, res, next) => {
   let perPage = 4;
   let page = req.query.page || 1;
@@ -138,34 +63,7 @@ module.exports.productpage = async (req, res, next) => {
     });//, countview: countview.showtoOne(data._id)
   } catch (err) {
     next(err);
-
-  }
-
-  // Product.findOne({ _id: req.params.id  }, async(err,data)=>{
-  //   try{
-  //     let countview =  new CountView(req.session.countview? req.session.countview : {})
-  //     countview.add(data._id);
-  //     req.session.countview = countview;
-  //     console.log(req.session.countview);
-  //     if(req.isAuthenticated()){
-  //       let cartuser;
-  //       cartuser = await CartUser.findOne({user: req.user});
-  //       if(cartuser){
-  //         cartuser.countview = req.session.countview;
-  //       }else{
-  //         cartuser = new CartUser({user: req.user, countview: req.session.countview});
-  //       }
-  //       cartuser.save();
-  //     }
-  //     let products = await Product.find({cat : data.cat});
-  //     result = await products.filter(element => element.id !== data.id);
-  //     let comments = await Comment.find({postId : data.id}).skip((perPage * page) - perPage).limit(perPage);
-  //     let count = await Comment.find({postId : data.id}).count().exec();
-  //     res.render('product/product-page',{data: data, products: result.splice(Math.floor(Math.random()*products.length),3), postId: data._id, comments:comments, currentpage : page, total_page: Math.ceil(count / perPage), countview: countview.showtoOne(data._id)});
-  //   }catch(err){
-  //     next(err);
-  //   }
-  // });   
+  }  
 };
 var commentmodels = require('../models/comment')
 module.exports.productpagepost = async (req, res, next) => {
@@ -176,8 +74,6 @@ module.exports.productpagepost = async (req, res, next) => {
     res.redirect('back');
   }
   try {
-    //await query('insert into comment set ?', [{ ID_Customer: req.user.ID_Customer, ID_Book: postId, Comment: comment, DateComment: new Date() }]);
-
     await commentmodels.addcomment(req.user.ID_Customer, postId, comment);
   } catch (error) {
     next(error);
@@ -221,11 +117,6 @@ module.exports.addtocart = async function (req, res, next) {
   //lay cart cua khach hang
   let orderuser = await query('SELECT * FROM orders where ID_Customer = ? and Status = ?', [req.ID_Customer, 0]);
   if (orderuser.length == 0) {
-
-    // await query('insert into orders set ? ', {
-    //   ID_Customer: req.ID_Customer, DateCreated: new Date(),
-    //   Amount: createprice, TypePayment: "", Address: "", Name: "", Phone: "", Status: 0
-    // });
     await ordermodel.addOrder(req.ID_Customer, createprice);
     orderuser = await query('SELECT * FROM orders where ID_Customer = ? and Status = ?', [req.ID_Customer, 0]);
     orderuser = await query('SELECT * FROM orders where ID_Order = ?', orderuser[0].ID_Order);
@@ -236,7 +127,7 @@ module.exports.addtocart = async function (req, res, next) {
     res.redirect('/products');
     return;
   }
-  //orderuser = await query('SELECT * FROM orders where ID_Customer = ?', req.ID_Customer);
+  
   orderuser[0].Amount += createprice;
   await query('update orders set Amount = ? where ID_Order = ? ', [orderuser[0].Amount, orderuser[0].ID_Order])
 
@@ -259,9 +150,7 @@ module.exports.viewcart = async function (req, res, next) {
   let totalPrice = 0;
   if (req.isAuthenticated()) {
     let dataorder = await query('SELECT * FROM orders where ID_Customer = ? and Status = ?', [req.user.ID_Customer, 0]);
-
-    let products = [];
-    let uniqueObjects = null;
+    
     if (dataorder.length > 0) {
       detailorder = await query('SELECT b.imagePath, b.NameBook, b.ID_Book, b.Price, b.Discount,' +
         ' d.Quantity_DetailOrder, d.Price as detail_orderPrice FROM book b inner join detail_order d where b.ID_Book = d.ID_Book and d.ID_Order = ?', [dataorder[0].ID_Order]);

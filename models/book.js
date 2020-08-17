@@ -85,5 +85,19 @@ class book {
         let book = await query('select * from book where ID_Book = ?', [ID_Book]);
         return book[0].Quantity_Book;
     };
+    static formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
 
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [day, month, year].join('-');
+    }
 };
+
+module.exports = book;
