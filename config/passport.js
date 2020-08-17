@@ -6,20 +6,7 @@ var util = require('util');
 const customer = require('../models/customer');
 require('dotenv').config();
 
-var db = mysql.createConnection({
-    host: process.env.host,
-    user: process.env.user,
-    password: process.env.password,
-    database: process.env.database
-});
-db.connect((err) => {
-
-    if (err) {
-        throw err;
-    }
-    console.log('Mysql Connected')
-})
-const query = util.promisify(db.query).bind(db);
+var query = require('../models/db');
 
 
 passport.serializeUser(function (user, done) {
@@ -28,22 +15,21 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(async function (id, done) {
     const sql = 'SELECT * FROM customer where ID_Customer = ?';
-    db.query(sql, id, (err, data) => {
-        result = data[0];
-        let user = new customer();
-        user.ID_Customer = result.ID_Customer;
-        user.UserName = result.UserName;
-        user.PassWord = result.PassWord;
-        user.FullName = result.FullName;
-        user.Gender = result.Gender;
-        user.Email = result.Email;
-        user.Phone = result.Phone;
-        user.Address = result.Address;
+    data = await query(sql, id);
+    result = data[0];
+    let user = new customer();
+    user.ID_Customer = result.ID_Customer;
+    user.UserName = result.UserName;
+    user.PassWord = result.PassWord;
+    user.FullName = result.FullName;
+    user.Gender = result.Gender;
+    user.Email = result.Email;
+    user.Phone = result.Phone;
+    user.Address = result.Address;
 
-        result.Birthday.setDate(result.Birthday.getDate() + 1);
-        user.Birthday = result.Birthday.toISOString().slice(0, 10);
-        done(err, user);
-    });
+    result.Birthday.setDate(result.Birthday.getDate() + 1);
+    user.Birthday = result.Birthday.toISOString().slice(0, 10);
+    done(null, user);
 });
 
 var loggedIn = false;
