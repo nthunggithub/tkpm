@@ -167,6 +167,23 @@ module.exports.productpage = async (req, res, next) => {
   // });   
 };
 var commentmodels = require('../models/comment')
+module.exports.productpagepost = async (req, res, next) => {
+  //const name = req.body.name || req.user.name || req.user.username;
+  const comment = req.body.comment;
+  const postId = req.body.postId;
+  if (!req.isAuthenticated) {
+    res.redirect('back');
+  }
+  try {
+    //await query('insert into comment set ?', [{ ID_Customer: req.user.ID_Customer, ID_Book: postId, Comment: comment, DateComment: new Date() }]);
+
+    await commentmodels.addcomment(req.user.ID_Customer, postId, comment);
+  } catch (error) {
+    next(error);
+  }
+  res.redirect('back');
+  //res.redirect(req.url);
+};
 
 module.exports.checkout = function (req, res, next) {
   res.render('product/checkout');
