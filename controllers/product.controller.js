@@ -1,5 +1,3 @@
-//var CartUser = require('../models/sessionuser');
-var CountView = require('../models/countview');
 var query = require('../models/db');
 var ordermodel = require('../models/order');
 
