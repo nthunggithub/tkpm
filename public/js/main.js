@@ -24,6 +24,11 @@
 
       if(Url.search("Category")===-1&&Category!==undefined)
       {        
+              if(location==true)
+              {
+                Url=Url+"&Category="+(Category);
+              }
+              else{
               if(Url[Url.search('products'+8)]===undefined)
               {
                   Url=Url+"?Category="+(Category);
@@ -32,6 +37,7 @@
               {
                   Url=Url+"&Category="+(Category);
               }
+            }
       }
       if(Url.search("Category")>-1&&Url.search(Category)===-1)
       {
@@ -55,7 +61,6 @@
       {
           // var temp=Url.search('products')+8;
           // alert(Url[temp]);
-        
           if(Url[Url.search('Author')+8]===undefined)
           {
               Url=Url+"?Author="+Author;
@@ -86,6 +91,11 @@
       {
           if(Url.search("price")===-1&&Url.search(fields)===-1)
           {
+            if(location==true)
+            {
+              Url=Url+"&price="+fields;
+            }
+            else{
               if(Url[Url.search('products')+8]===undefined)
               {
                   Url=Url+"?price="+fields;
@@ -94,6 +104,7 @@
               {
                   Url = Url + "&price=" + fields;
               }
+            }
           }
           if(Url.search("price")>-1&&Url.search(fields)===-1)
           {
@@ -135,11 +146,17 @@
       {
           if(Url.search("SortPrice")===-1&&fields!==undefined)
           {
+            if(location==true)
+            {
+              Url=Url+"&SortPrice="+fields;
+            }
+            else{
               if (Url[Url.search('products')+8]===undefined) {
                   Url = Url + "?SortPrice=" + fields;
               } else {
                   Url = Url + "&SortPrice=" + fields;
               }
+            }
           }
           if(Url.search("SortPrice")>-1&&Url.search(fields)===-1)
           {

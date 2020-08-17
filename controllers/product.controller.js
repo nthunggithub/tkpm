@@ -18,8 +18,6 @@ module.exports.products = async function (req, res, next) {
   var perPage = 9;
   let page = req.query.page || 1;
 
-  let querygender = {};
-
   let querysortprice = {};
   if (req.query.SortPrice == "gia-giam") {
     querysortprice = { price: -1 }
@@ -53,13 +51,18 @@ module.exports.products = async function (req, res, next) {
   
   
   var search = req.query.search;
-  var querysearch = {};
+  var querysearch = '';
+  let data;
   if (search != undefined) {
-    querysearch = { productname: { $regex: req.query.search, $options: 'i' } };
+    querysearch = search;
+    data = await query(`select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category`
+    + ` and a.ID_Author = b.ID_Author and b.NameBook LIKE '%`+ search + `%'`);
+  }else{
+    data = await query('select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category'
+    + ' and a.ID_Author = b.ID_Author');
   }
  
-  let data = await query('select * from book b inner join author a inner join category c where c.ID_Category = b.ID_Category'
-    + ' and a.ID_Author = b.ID_Author');
+  
   let products = [];
   let books = JSON.parse(JSON.stringify(data));
   for (let book of books) {
